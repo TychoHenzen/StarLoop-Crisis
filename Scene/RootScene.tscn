@@ -1,0 +1,242 @@
+[gd_scene load_steps=15 format=3 uid="uid://c5yunbjca2udw"]
+
+[ext_resource type="Script" path="res://Script/VoxelChunk.cs" id="1_jh142"]
+[ext_resource type="Script" path="res://Script/destroy.cs" id="3_prpox"]
+[ext_resource type="Texture2D" uid="uid://bkvtm8x8y7u82" path="res://Graphics/SpriteSheet.png" id="3_yee6s"]
+[ext_resource type="Script" path="res://Script/Player/PlayerControl.cs" id="5_amtv7"]
+[ext_resource type="Script" path="res://Script/Player/CameraViewer.cs" id="6_0jfwu"]
+[ext_resource type="Texture2D" uid="uid://brko1xvak7g3v" path="res://Graphics/Location_dot_black.svg.png" id="7_kpkig"]
+[ext_resource type="Script" path="res://Script/Player/Raycasting.cs" id="7_o2fjw"]
+[ext_resource type="Script" path="res://Script/Player/PlayerWalk.cs" id="7_q6xq2"]
+[ext_resource type="Script" path="res://Script/Toolbar/ToolbarItem.cs" id="9_mcoy2"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_frhgl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8co4a"]
+albedo_texture = ExtResource("3_yee6s")
+texture_filter = 0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_s4c6v"]
+friction = 0.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ywd3e"]
+height = 1.8
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3thp0"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Chunk" type="StaticBody3D" parent="."]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Chunk"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Chunk"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Chunk2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk2"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk2/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Chunk2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Chunk3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk3"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk3/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Chunk3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk4" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Chunk4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk4"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk4/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Chunk4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Player" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.91473, 2.88062, 3.38848)
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_s4c6v")
+continuous_cd = true
+max_contacts_reported = 10
+contact_monitor = true
+angular_damp = 10.0
+script = ExtResource("5_amtv7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_ywd3e")
+
+[node name="Camera3D" type="Camera3D" parent="Player/CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.674915, 0)
+
+[node name="View" type="Node" parent="Player"]
+script = ExtResource("6_0jfwu")
+SensitivityY = 0.1
+
+[node name="Movement" type="Node" parent="Player"]
+script = ExtResource("7_q6xq2")
+JumpForce = 4.0
+MoveSpeed = 5.0
+SprintSpeed = 10.0
+
+[node name="Raycasting" type="Node" parent="Player" node_paths=PackedStringArray("Highlight", "Targeted")]
+script = ExtResource("7_o2fjw")
+Highlight = NodePath("ViewedVoxel")
+Targeted = NodePath("PlacedVoxel")
+
+[node name="ViewedVoxel" type="CSGBox3D" parent="Player/Raycasting"]
+transparency = 0.75
+size = Vector3(0.15, 0.15, 0.15)
+
+[node name="PlacedVoxel" type="CSGBox3D" parent="Player/Raycasting"]
+transparency = 0.75
+size = Vector3(0.05, 0.05, 0.05)
+
+[node name="TextureRect" type="TextureRect" parent="Player"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_kpkig")
+expand_mode = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Player"]
+layout_direction = 2
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -114.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect2" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect3" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect4" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect5" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect6" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect7" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect8" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+
+[node name="TextureRect9" type="TextureRect" parent="Player/HBoxContainer"]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+expand_mode = 1
+script = ExtResource("9_mcoy2")
