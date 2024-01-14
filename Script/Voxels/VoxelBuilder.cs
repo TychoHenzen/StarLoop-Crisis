@@ -14,11 +14,7 @@ public class VoxelBuilder
 	const float tileWidth = 1.0f / tilesPerRow;
 	const float tileHeight = 1.0f / tilesPerRow;
 
-	public static int index(int x, int y, int z)
-	{
-		if (x < 0 || x >= chunkSize || y < 0 || y >= chunkSize || z < 0 || z >= chunkSize) return -1; 
-		return x * chunkSize * chunkSize + y * chunkSize + z;
-	}
+	
 
 	public static Mesh BuildMesh(byte[] voxelData)
 	{
@@ -38,7 +34,7 @@ public class VoxelBuilder
 			{
 				for (int z = 0; z < chunkSize; z++)
 				{
-					if (voxelData[index(x, y, z)] != 0)
+					if (voxelData[VoxelConstants.index(x, y, z)] != 0)
 						CreateCube(x,y,z,vertices,normals,indices,Uvs, ref vertexCount, voxelData);
 				}
 			}
@@ -71,7 +67,7 @@ public class VoxelBuilder
 			{
 				for (int z = 0; z < chunkSize; z++)
 				{
-					if (voxelData[index(x, y, z)] != 0)
+					if (voxelData[VoxelConstants.index(x, y, z)] != 0)
 						CreateCube(x,y,z,vertices,normals,indices,Uvs, ref vertexCount, voxelData);
 				}
 			}
@@ -101,9 +97,9 @@ public class VoxelBuilder
 
 			normals.AddRange(new []{normal, normal, normal, normal});
 		}
-		Vector2 faceColor = GetUVForByte(voxelData[index(x, y, z)]);
+		Vector2 faceColor = GetUVForByte(voxelData[VoxelConstants.index(x, y, z)]);
 
-		var indexer = index(x, y, z + 1);
+		var indexer = VoxelConstants.index(x, y, z + 1);
 		if(indexer < 0 || voxelData[indexer] == 0)
 		AddFace(new Vector3[]
 		{
@@ -114,7 +110,7 @@ public class VoxelBuilder
 		}, faceColor, ref vertexCount);
 		// Back face
 		
-		indexer = index(x, y, z - 1);
+		indexer = VoxelConstants.index(x, y, z - 1);
 		if(indexer  < 0 || voxelData[indexer] == 0)
 		AddFace(new Vector3[]
 		{
@@ -126,7 +122,7 @@ public class VoxelBuilder
 
 // Left face
 		
-		indexer = index(x-1, y, z);
+		indexer = VoxelConstants.index(x-1, y, z);
 		if(indexer  < 0 || voxelData[indexer] == 0)
 		AddFace(new Vector3[]
 		{
@@ -137,7 +133,7 @@ public class VoxelBuilder
 		},  faceColor, ref vertexCount);
 
 // Right face
-		indexer = index(x+1, y, z);
+		indexer = VoxelConstants.index(x+1, y, z);
 		if(indexer  < 0 || voxelData[indexer] == 0)
 		AddFace(new Vector3[]
 		{
@@ -148,7 +144,7 @@ public class VoxelBuilder
 		},  faceColor, ref vertexCount);
 
 // Top face
-		indexer = index(x, y+1, z);
+		indexer = VoxelConstants.index(x, y+1, z);
 		if(indexer  < 0 || voxelData[indexer] == 0)
 		AddFace(new Vector3[]
 		{
@@ -159,7 +155,7 @@ public class VoxelBuilder
 		},  faceColor, ref vertexCount);
 
 // Bottom face
-		indexer = index(x, y-1, z);
+		indexer = VoxelConstants.index(x, y-1, z);
 		if(indexer  < 0 || voxelData[indexer] == 0)
 		AddFace(new Vector3[]
 		{
@@ -171,7 +167,7 @@ public class VoxelBuilder
 
 	}
 
-	private static Vector2 GetUVForByte(byte value)
+	public static Vector2 GetUVForByte(byte value)
 	{
 
 		int xIndex = value % tilesPerRow;
@@ -182,4 +178,6 @@ public class VoxelBuilder
 
 		return new Vector2(u, v);
 	}
+
+	public static Vector2 TileSize => new(1f / tilesPerRow, 1f / tilesPerRow);
 }

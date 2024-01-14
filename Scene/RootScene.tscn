@@ -1,6 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://c5yunbjca2udw"]
+[gd_scene load_steps=29 format=3 uid="uid://c5yunbjca2udw"]
 
-[ext_resource type="Script" path="res://Script/VoxelChunk.cs" id="1_jh142"]
+[ext_resource type="Script" path="res://Script/Voxels/VoxelChunk.cs" id="1_jh142"]
 [ext_resource type="Script" path="res://Script/destroy.cs" id="3_prpox"]
 [ext_resource type="Texture2D" uid="uid://bkvtm8x8y7u82" path="res://Graphics/SpriteSheet.png" id="3_yee6s"]
 [ext_resource type="Script" path="res://Script/Player/PlayerControl.cs" id="5_amtv7"]
@@ -8,7 +8,30 @@
 [ext_resource type="Texture2D" uid="uid://brko1xvak7g3v" path="res://Graphics/Location_dot_black.svg.png" id="7_kpkig"]
 [ext_resource type="Script" path="res://Script/Player/Raycasting.cs" id="7_o2fjw"]
 [ext_resource type="Script" path="res://Script/Player/PlayerWalk.cs" id="7_q6xq2"]
+[ext_resource type="Texture2D" uid="uid://68csr6vxt2mt" path="res://Graphics/Toolbar/Slot1.tres" id="9_76yei"]
 [ext_resource type="Script" path="res://Script/Toolbar/ToolbarItem.cs" id="9_mcoy2"]
+[ext_resource type="Script" path="res://Scene/ToolbarControl.cs" id="9_o1e5n"]
+[ext_resource type="Texture2D" uid="uid://c8vhy8p6d8xvs" path="res://Graphics/userinterfaceiconswindowsswitchespanelsbars/AssetsUIWerdantaN3/PNG/Inventory_SelectCell.png" id="11_evnqi"]
+[ext_resource type="Texture2D" uid="uid://u86xqcvlv58o" path="res://Graphics/Toolbar/Slot2.tres" id="11_lhtvk"]
+[ext_resource type="Texture2D" uid="uid://ch2dympl23ugm" path="res://Graphics/Toolbar/Slot3.tres" id="12_uruky"]
+[ext_resource type="Texture2D" uid="uid://dllioq8ne7n1s" path="res://Graphics/Toolbar/Slot4.tres" id="13_begxu"]
+[ext_resource type="Script" path="res://Scene/VoxelController.cs" id="14_ny18w"]
+[ext_resource type="Texture2D" uid="uid://cc7agcay6ouh7" path="res://Graphics/Toolbar/Slot5.tres" id="14_r32x3"]
+[ext_resource type="Texture2D" uid="uid://rqvrfa6vr7a3" path="res://Graphics/Toolbar/Slot6.tres" id="15_nkrkw"]
+[ext_resource type="Texture2D" uid="uid://bmr3ls8c2dxmh" path="res://Graphics/Toolbar/Slot7.tres" id="16_desmm"]
+[ext_resource type="Texture2D" uid="uid://d2545mf4j1n5r" path="res://Graphics/Toolbar/Slot8.tres" id="17_hq2ka"]
+[ext_resource type="Texture2D" uid="uid://bh8wuxakveueq" path="res://Graphics/Toolbar/Slot9.tres" id="18_uxh0d"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3thp0"]
+
+[sub_resource type="SystemFont" id="SystemFont_f3vat"]
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_pr3fx"]
+font = SubResource("SystemFont_f3vat")
+font_size = 36
+font_color = Color(0, 0, 0, 1)
+outline_size = 2
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_frhgl"]
 
@@ -22,94 +45,2939 @@ friction = 0.0
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ywd3e"]
 height = 1.8
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3thp0"]
-
 [node name="Node3D" type="Node3D"]
 
-[node name="Chunk" type="StaticBody3D" parent="."]
+[node name="GUI" type="Node" parent="."]
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Chunk"]
+[node name="TextureRect" type="TextureRect" parent="GUI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_kpkig")
+expand_mode = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI" node_paths=PackedStringArray("element1", "element2", "element3", "element4", "element5", "element6", "element7", "element8", "element9", "Indicator")]
+layout_direction = 2
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -114.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+script = ExtResource("9_o1e5n")
+element1 = NodePath("TextureRect")
+element2 = NodePath("TextureRect2")
+element3 = NodePath("TextureRect3")
+element4 = NodePath("TextureRect4")
+element5 = NodePath("TextureRect5")
+element6 = NodePath("TextureRect6")
+element7 = NodePath("TextureRect7")
+element8 = NodePath("TextureRect8")
+element9 = NodePath("TextureRect9")
+Indicator = NodePath("TextureRect/TextureRect")
+
+[node name="TextureRect" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("9_76yei")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+label = NodePath("Label")
+
+[node name="TextureRect" type="TextureRect" parent="GUI/HBoxContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_evnqi")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="GUI/HBoxContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("11_lhtvk")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 1
+label = NodePath("Label2")
+
+[node name="Label2" type="Label" parent="GUI/HBoxContainer/TextureRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect3" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("12_uruky")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 2
+label = NodePath("Label3")
+
+[node name="Label3" type="Label" parent="GUI/HBoxContainer/TextureRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect4" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("13_begxu")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 3
+label = NodePath("Label4")
+
+[node name="Label4" type="Label" parent="GUI/HBoxContainer/TextureRect4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect5" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("14_r32x3")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 4
+label = NodePath("Label5")
+
+[node name="Label5" type="Label" parent="GUI/HBoxContainer/TextureRect5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect6" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("15_nkrkw")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 5
+label = NodePath("Label6")
+
+[node name="Label6" type="Label" parent="GUI/HBoxContainer/TextureRect6"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect7" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("16_desmm")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 6
+label = NodePath("Label7")
+
+[node name="Label7" type="Label" parent="GUI/HBoxContainer/TextureRect7"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect8" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("17_hq2ka")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 7
+label = NodePath("Label8")
+
+[node name="Label8" type="Label" parent="GUI/HBoxContainer/TextureRect8"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect9" type="TextureRect" parent="GUI/HBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("CanvasItemMaterial_3thp0")
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("18_uxh0d")
+expand_mode = 1
+script = ExtResource("9_mcoy2")
+currentVal = 8
+label = NodePath("Label9")
+
+[node name="Label9" type="Label" parent="GUI/HBoxContainer/TextureRect9"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_pr3fx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="World" type="Node" parent="."]
+script = ExtResource("14_ny18w")
+
+[node name="Chunk" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
 omni_range = 18.6863
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk"]
 shape = SubResource("ConcavePolygonShape3D_frhgl")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk/CollisionShape3D"]
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("1_jh142")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Chunk"]
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
 transparency = 0.93
 size = Vector3(4, 4, 4)
 script = ExtResource("3_prpox")
 
-[node name="Chunk2" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+[node name="Chunk2" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Chunk2"]
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
 omni_range = 18.6863
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk2"]
 shape = SubResource("ConcavePolygonShape3D_frhgl")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk2/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk2/CollisionShape3D"]
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("1_jh142")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Chunk2"]
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
 transparency = 0.93
 size = Vector3(4, 4, 4)
 script = ExtResource("3_prpox")
 
-[node name="Chunk3" type="StaticBody3D" parent="."]
+[node name="Chunk3" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk3"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk3/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk4" type="StaticBody3D" parent="World"]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk4"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk4/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk5" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk5"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk5/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk6" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk6"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk6/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk7" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk7"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk7/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk8" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk8"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk8/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk9" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk9"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk9/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk10" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk10"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk10/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk11" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk11"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk11/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk12" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk12"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk12"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk12/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk12"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk13" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk13"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk13"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk13/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk13"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk14" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk14"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk14"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk14/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk14"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk15" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk15"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk15"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk15/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk15"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk16" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk16"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk16"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk16/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk16"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk17" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk17"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk17"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk17/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk17"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk18" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk18"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk18"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk18/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk18"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk19" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk19"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk19"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk19/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk19"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk20" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk20"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk20"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk20/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk20"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk21" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk21"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk21"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk21/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk21"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk22" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk22"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk22"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk22/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk22"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk23" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk23"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk23"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk23/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk23"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk24" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk24"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk24"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk24/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk24"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk25" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk25"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk25"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk25/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk25"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk26" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk26"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk26"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk26/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk26"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk27" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk27"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk27"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk27/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk27"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk28" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk28"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk28"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk28/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk28"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk29" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk29"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk29"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk29/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk29"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk30" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk30"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk30"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk30/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk30"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk31" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk31"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk31"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk31/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk31"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk32" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk32"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk32"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk32/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk32"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk33" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk33"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk33"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk33/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk33"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk34" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk34"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk34"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk34/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk34"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk35" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk35"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk35"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk35/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk35"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk36" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk36"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk36"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk36/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk36"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk37" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk37"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk37"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk37/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk37"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk38" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk38"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk38"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk38/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk38"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk39" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk39"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk39"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk39/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk39"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk40" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk40"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk40"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk40/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk40"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk41" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk41"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk41"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk41/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk41"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk42" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk42"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk42"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk42/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk42"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk43" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk43"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk43"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk43/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk43"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk44" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk44"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk44"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk44/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk44"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk45" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk45"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk45"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk45/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk45"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk46" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk46"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk46"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk46/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk46"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk47" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk47"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk47"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk47/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk47"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk48" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk48"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk48"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk48/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk48"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk49" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk49"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk49"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk49/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk49"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk50" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk50"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk50"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk50/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk50"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk51" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk51"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk51"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk51/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk51"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk52" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk52"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk52"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk52/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk52"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk53" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk53"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk53"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk53/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk53"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk54" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk54"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk54"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk54/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk54"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk55" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk55"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk55"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk55/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk55"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk56" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk56"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk56"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk56/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk56"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk57" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk57"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk57"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk57/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk57"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk58" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk58"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk58"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk58/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk58"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk59" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk59"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk59"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk59/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk59"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk60" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk60"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk60"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk60/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk60"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk61" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk61"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk61"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk61/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk61"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk62" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk62"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk62"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk62/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk62"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk63" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk63"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk63"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk63/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk63"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk64" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk64"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk64"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk64/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk64"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk65" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk65"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk65"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk65/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk65"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk66" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk66"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk66"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk66/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk66"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk67" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk67"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk67"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk67/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk67"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk68" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk68"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk68"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk68/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk68"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk69" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk69"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk69"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk69/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk69"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk70" type="StaticBody3D" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Chunk3"]
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk70"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
 omni_range = 18.6863
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk3"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk70"]
 shape = SubResource("ConcavePolygonShape3D_frhgl")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk3/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk70/CollisionShape3D"]
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("1_jh142")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Chunk3"]
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk70"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
 transparency = 0.93
 size = Vector3(4, 4, 4)
 script = ExtResource("3_prpox")
 
-[node name="Chunk4" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
+[node name="Chunk71" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 4)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Chunk4"]
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk71"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
 omni_range = 18.6863
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Chunk4"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk71"]
 shape = SubResource("ConcavePolygonShape3D_frhgl")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Chunk4/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk71/CollisionShape3D"]
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("1_jh142")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Chunk4"]
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk71"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
 transparency = 0.93
 size = Vector3(4, 4, 4)
 script = ExtResource("3_prpox")
 
-[node name="Player" type="RigidBody3D" parent="."]
+[node name="Chunk72" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk72"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk72"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk72/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk72"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk73" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk73"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk73"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk73/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk73"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk74" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk74"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk74"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk74/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk74"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk75" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk75"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk75"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk75/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk75"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk76" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk76"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk76"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk76/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk76"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk77" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk77"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk77"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk77/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk77"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk78" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk78"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk78"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk78/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk78"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk79" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk79"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk79"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk79/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk79"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk80" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk80"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk80"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk80/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk80"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk81" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk81"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk81"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk81/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk81"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk82" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk82"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk82"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk82/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk82"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk83" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk83"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk83"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk83/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk83"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk84" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk84"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk84"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk84/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk84"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk85" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk85"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk85"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk85/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk85"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk86" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk86"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk86"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk86/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk86"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk87" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 4)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk87"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk87"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk87/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk87"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk88" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk88"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk88"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk88/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk88"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk89" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk89"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk89"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk89/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk89"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk90" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk90"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk90"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk90/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk90"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk91" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk91"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk91"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk91/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk91"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk92" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk92"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk92"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk92/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk92"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk93" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk93"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk93"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk93/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk93"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk94" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk94"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk94"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk94/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk94"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk95" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk95"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk95"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk95/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk95"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk96" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 8)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk96"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk96"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk96/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk96"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk97" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk97"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk97"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk97/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk97"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk98" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk98"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk98"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk98/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk98"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk99" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk99"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk99"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk99/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk99"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk100" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk100"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk100"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk100/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk100"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk101" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk101"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk101"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk101/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk101"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk102" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk102"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk102"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk102/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk102"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk103" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk103"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk103"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk103/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk103"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk104" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk104"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk104"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk104/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk104"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk105" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk105"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk105"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk105/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk105"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk106" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk106"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk106"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk106/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk106"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk107" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk107"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk107"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk107/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk107"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk108" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk108"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk108"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk108/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk108"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk109" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk109"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk109"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk109/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk109"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk110" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk110"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk110"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk110/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk110"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk111" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk111"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk111"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk111/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk111"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk112" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk112"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk112"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk112/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk112"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk113" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk113"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk113"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk113/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk113"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk114" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk114"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk114"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk114/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk114"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk115" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk115"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk115"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk115/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk115"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk116" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk116"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk116"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk116/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk116"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk117" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk117"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk117"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk117/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk117"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk118" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk118"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk118"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk118/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk118"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk119" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 20)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk119"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk119"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk119/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk119"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk120" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk120"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk120"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk120/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk120"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk121" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk121"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk121"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk121/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk121"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk122" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk122"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk122"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk122/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk122"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk123" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk123"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk123"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk123/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk123"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk124" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk124"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk124"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk124/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk124"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk125" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk125"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk125"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk125/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk125"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk126" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk126"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk126"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk126/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk126"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk127" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 28)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk127"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk127"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk127/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk127"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Chunk128" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, 24)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk128"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0851, 1.81183, 1.99109)
+omni_range = 18.6863
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Chunk128"]
+shape = SubResource("ConcavePolygonShape3D_frhgl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Chunk128/CollisionShape3D"]
+material_override = SubResource("StandardMaterial3D_8co4a")
+skeleton = NodePath("")
+script = ExtResource("1_jh142")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Chunk128"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+transparency = 0.93
+size = Vector3(4, 4, 4)
+script = ExtResource("3_prpox")
+
+[node name="Player" type="RigidBody3D" parent="." node_paths=PackedStringArray("_voxels", "_toolbar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.91473, 2.88062, 3.38848)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
@@ -119,6 +2987,8 @@ max_contacts_reported = 10
 contact_monitor = true
 angular_damp = 10.0
 script = ExtResource("5_amtv7")
+_voxels = NodePath("../World")
+_toolbar = NodePath("../GUI/HBoxContainer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape3D_ywd3e")
@@ -148,95 +3018,3 @@ size = Vector3(0.15, 0.15, 0.15)
 [node name="PlacedVoxel" type="CSGBox3D" parent="Player/Raycasting"]
 transparency = 0.75
 size = Vector3(0.05, 0.05, 0.05)
-
-[node name="TextureRect" type="TextureRect" parent="Player"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1.0
-offset_top = -1.0
-offset_right = 1.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("7_kpkig")
-expand_mode = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Player"]
-layout_direction = 2
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -114.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_direction = 2
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect2" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect3" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect4" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect5" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect6" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect7" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect8" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")
-
-[node name="TextureRect9" type="TextureRect" parent="Player/HBoxContainer"]
-material = SubResource("CanvasItemMaterial_3thp0")
-layout_mode = 2
-size_flags_horizontal = 3
-expand_mode = 1
-script = ExtResource("9_mcoy2")

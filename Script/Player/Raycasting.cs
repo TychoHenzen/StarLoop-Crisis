@@ -8,15 +8,15 @@ public partial class Raycasting : Node
     [Export] public Node3D Highlight;
     [Export] public Node3D Targeted;
 
-    private Vector3 BaseVoxel => Highlight.GlobalPosition * VoxelBuilder.VoxelScalar - Vector3.One / 2;
-    public Vector3 ChunkVoxel => new(Mathf.PosMod(BaseVoxel.X, 32),
-        Mathf.PosMod(BaseVoxel.Y, 32),
-        Mathf.PosMod(BaseVoxel.Z, 32));
-    private Vector3 VoxelChunkFloat => BaseVoxel / VoxelBuilder.chunkSize;
+    private Vector3 BaseVoxel(bool inFront) => (inFront ? Targeted:Highlight).GlobalPosition * VoxelBuilder.VoxelScalar - Vector3.One / 2;
+    public Vector3 ChunkVoxel(bool inFront) => new(Mathf.PosMod(BaseVoxel(inFront).X, 32),
+        Mathf.PosMod(BaseVoxel(inFront).Y, 32),
+        Mathf.PosMod(BaseVoxel(inFront).Z, 32));
+    private Vector3 VoxelChunkFloat(bool inFront) => BaseVoxel(inFront) / VoxelConstants.chunkSize;
 
-    public Vector3 VoxelChunk => new(Mathf.FloorToInt(VoxelChunkFloat.X) + 1,
-        Mathf.FloorToInt(VoxelChunkFloat.Y) + 1,
-        Mathf.FloorToInt(VoxelChunkFloat.Z) + 1);
+    public Vector3 VoxelChunk(bool inFront) => new(Mathf.FloorToInt(VoxelChunkFloat(inFront).X) ,
+        Mathf.FloorToInt(VoxelChunkFloat(inFront).Y) ,
+        Mathf.FloorToInt(VoxelChunkFloat(inFront).Z) );
 
     public override void _Process(double delta)
     {
