@@ -13,8 +13,10 @@ using FileAccess = Godot.FileAccess;
 public partial class VoxelChunk : MeshInstance3D
 {
 	public byte[] Voxels;
+	public bool Dirty;
 
 	private CollisionShape3D collider;
+	private ArrayMesh myMesh;
 
 	private Vector3 ChunkPos;
 	// Called when the node enters the scene tree for the first time.
@@ -22,11 +24,11 @@ public partial class VoxelChunk : MeshInstance3D
 	{
 		collider = GetParent<CollisionShape3D>();
 		ChunkPos = (GlobalPosition / (VoxelBuilder.VoxelScalar/2f)).Floor();
+		Voxels = ChunkLoader.LoadFile(ChunkPos);
+		Mesh = myMesh = VoxelBuilder.BuildMesh(Voxels);
+		collider.Shape = VoxelBuilder.BuildShape(Voxels);
 		GD.Print($"Registering {ChunkPos}");
 		GetParent().GetParent().GetParent<VoxelController>().Register(ChunkPos, this);
-		Voxels = ChunkLoader.LoadFile(ChunkPos);
-		Mesh = VoxelBuilder.BuildMesh(Voxels);
-		collider.Shape = VoxelBuilder.BuildShape(Voxels);
 	}
 
 
@@ -35,5 +37,14 @@ public partial class VoxelChunk : MeshInstance3D
 		Voxels[VoxelConstants.index((int)pos.X, (int)pos.Y, (int)pos.Z)] = newByte;
 		Mesh = VoxelBuilder.BuildMesh(Voxels);
 		collider.Shape = VoxelBuilder.BuildShape(Voxels);
+	}
+
+	public bool Redraw()
+	{
+		if (!Dirty) return false;
+		
+		Mesh = VoxelBuilder.BuildMesh(Voxels);
+		Dirty = false;
+		return true;
 	}
 }

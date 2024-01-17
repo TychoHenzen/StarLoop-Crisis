@@ -13,10 +13,10 @@ public class VoxelBuilder
 	public const int tilesPerRow = 16;
 	const float tileWidth = 1.0f / tilesPerRow;
 	const float tileHeight = 1.0f / tilesPerRow;
-
 	
+	public static Vector2 TileSize => new(1f / tilesPerRow, 1f / tilesPerRow);
 
-	public static Mesh BuildMesh(byte[] voxelData)
+	public static ArrayMesh BuildMesh(byte[] voxelData)
 	{
 		ArrayMesh returned = new ArrayMesh();
 		
@@ -48,6 +48,26 @@ public class VoxelBuilder
 		return returned;
 	}
 
+	public static void UpdateMeshTexture(ArrayMesh mesh, byte[] voxelData)
+	{
+		var arrays = mesh.SurfaceGetArrays(0);
+		
+		int vertexCount = 0;
+		Vector2[] uvs = arrays[(int)Mesh.ArrayType.TexUV].AsVector2Array();
+		for (int x = 0; x < chunkSize; x++)
+		{
+			for (int y = 0; y < chunkSize; y++)
+			{
+				for (int z = 0; z < chunkSize; z++)
+				{
+					if (voxelData[VoxelConstants.index(x, y, z)] != 0)
+						CreateCube(x,y,z,uvs, ref vertexCount, voxelData);
+				}
+			}
+		}
+
+		mesh.SurfaceGetArrays(0)[(int)Mesh.ArrayType.TexUV] = uvs;
+	}
 	
 	public static Shape3D BuildShape(byte[] voxelData)
 	{
@@ -76,6 +96,57 @@ public class VoxelBuilder
 		returned.Data = indices.Select(i => vertices[i]).ToArray();
 		return returned;
 	}
+
+	private static Vector2 right = new(tileWidth, 0); 
+	private static Vector2 bot = new(0, tileHeight); 
+	private static Vector2 botRight = new(tileWidth, tileHeight); 
+	private static void CreateCube(int x, int y, int z, Vector2[] Uvs, ref int vertexCount,  byte[] voxelData)
+	{
+		
+		// Helper function to add a face
+		var i = vertexCount;
+
+		void AddFace(Vector2 Uv)
+		{
+			Uvs[i] = Uv;
+			Uvs[i+1] = Uv+right;
+			Uvs[i+2] = Uv+bot;
+			Uvs[i+3] = Uv+botRight;
+			
+		}
+		Vector2 faceColor = GetUVForByte(voxelData[VoxelConstants.index(x, y, z)]);
+
+		var indexer = VoxelConstants.index(x, y, z + 1);
+		if(indexer < 0 || voxelData[indexer] == 0)
+		AddFace( faceColor);
+		// Back face
+		
+		indexer = VoxelConstants.index(x, y, z - 1);
+		if(indexer  < 0 || voxelData[indexer] == 0)
+			AddFace( faceColor);
+
+// Left face
+		
+		indexer = VoxelConstants.index(x-1, y, z);
+		if(indexer  < 0 || voxelData[indexer] == 0)
+			AddFace( faceColor);
+
+// Right face
+		indexer = VoxelConstants.index(x+1, y, z);
+		if(indexer  < 0 || voxelData[indexer] == 0)
+			AddFace( faceColor);
+
+// Top face
+		indexer = VoxelConstants.index(x, y+1, z);
+		if(indexer  < 0 || voxelData[indexer] == 0)
+			AddFace( faceColor);
+
+// Bottom face
+		indexer = VoxelConstants.index(x, y-1, z);
+		if(indexer  < 0 || voxelData[indexer] == 0)
+			AddFace( faceColor);
+
+	}
 	private static void CreateCube(int x, int y, int z,List<Vector3> vertices, List<Vector3> normals, List<int> indices,
 		List<Vector2> Uvs, ref int vertexCount, byte[] voxelData)
 	{
@@ -87,7 +158,7 @@ public class VoxelBuilder
 			/VoxelScalar));
 			var i = vertexcount;
 			indices.AddRange(new[] { 0, 1, 2, 1, 3, 2 }.Select(index => index + i));
-			Uvs.AddRange(new []{Uv,Uv+new Vector2(tileWidth, 0),Uv+new Vector2(0, tileHeight),Uv+new Vector2(tileWidth, tileHeight)});
+			Uvs.AddRange(new []{Uv,Uv+right,Uv+bot,Uv+botRight});
 			vertexcount += faceVertices.Length;
 			
 			// Calculate normals using the cross product
@@ -179,5 +250,4 @@ public class VoxelBuilder
 		return new Vector2(u, v);
 	}
 
-	public static Vector2 TileSize => new(1f / tilesPerRow, 1f / tilesPerRow);
 }
