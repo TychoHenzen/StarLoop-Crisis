@@ -1,5 +1,14 @@
 namespace StarLoop.Script;
 
+public struct CellType
+{
+    private bool red;
+    private bool green;
+    private bool blue;
+    private bool filter;
+    private bool wire;
+    private int decay;
+}
 public struct WireworldTransition
 {
     public readonly Rule[] Neighbors;

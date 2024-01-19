@@ -26,8 +26,9 @@ public partial class VoxelChunk : MeshInstance3D
 		ChunkPos = (GlobalPosition / (VoxelBuilder.VoxelScalar/2f)).Floor();
 		Voxels = ChunkLoader.LoadFile(ChunkPos);
 		Mesh = myMesh = VoxelBuilder.BuildMesh(Voxels);
+		VoxelBuilder.UpdateMeshTexture(myMesh, Voxels);
 		collider.Shape = VoxelBuilder.BuildShape(Voxels);
-		GD.Print($"Registering {ChunkPos}");
+		GD.Print($"{DateTime.Now:O}Registering {ChunkPos}");
 		GetParent().GetParent().GetParent<VoxelController>().Register(ChunkPos, this);
 	}
 
@@ -35,7 +36,8 @@ public partial class VoxelChunk : MeshInstance3D
 	public void SetVoxel(Vector3 pos, byte newByte)
 	{
 		Voxels[VoxelConstants.index((int)pos.X, (int)pos.Y, (int)pos.Z)] = newByte;
-		Mesh = VoxelBuilder.BuildMesh(Voxels);
+		Mesh = myMesh = VoxelBuilder.BuildMesh(Voxels);
+		VoxelBuilder.UpdateMeshTexture(myMesh, Voxels);
 		collider.Shape = VoxelBuilder.BuildShape(Voxels);
 	}
 
@@ -43,7 +45,7 @@ public partial class VoxelChunk : MeshInstance3D
 	{
 		if (!Dirty) return false;
 		
-		Mesh = VoxelBuilder.BuildMesh(Voxels);
+		VoxelBuilder.UpdateMeshTexture(myMesh, Voxels);
 		Dirty = false;
 		return true;
 	}

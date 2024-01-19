@@ -8,9 +8,6 @@ using StarLoop.Script;
 public partial class WireWorldController : Node
 {
     private List<WireworldRef> WireWorldVoxels = new();
-
-    
-
     private static readonly Vector3[] offsets =
     {
         new(-1, -1, -1), new(-1, -1, 0), new(-1, -1, 1),
