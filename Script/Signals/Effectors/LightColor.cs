@@ -1,5 +1,6 @@
 using Godot;
-using System;
+
+namespace StarLoop.Script.Signals.Effectors;
 
 public partial class LightColor : OmniLight3D
 {

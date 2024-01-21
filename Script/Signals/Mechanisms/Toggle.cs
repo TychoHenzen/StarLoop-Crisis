@@ -1,5 +1,6 @@
-	using Godot;
-using System;
+using Godot;
+
+namespace StarLoop.Script.Signals.Mechanisms;
 
 public partial class Toggle : Node
 {

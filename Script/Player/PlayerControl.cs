@@ -1,7 +1,6 @@
 using System;
-using A_Chat_Of_Goblins.Scripts.Extensions;
-using A_Chat_Of_Goblins.Scripts.Player;
 using Godot;
+using StarLoop.Script.Extensions;
 
 namespace StarLoop.Script.Player;
 
@@ -72,7 +71,7 @@ public partial class PlayerControl : RigidBody3D
                 
                 if (keyEvent.KeyLabel == Key.F12 && keyEvent.Pressed)
                 {
-                    _wireWorld.preSave(_voxels);
+                    _wireWorld.PreSave(_voxels);
                     _voxels.Save();
                 }
                 

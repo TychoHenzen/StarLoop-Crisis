@@ -1,31 +1,32 @@
 using Godot;
-using System;
-using StarLoop.Script;
+using StarLoop.Script.Voxels;
+
+namespace StarLoop.Script.Toolbar;
 
 public partial class ToolbarItem : TextureRect
 {
 	[Export]
-	private byte currentVal;
+	private byte _currentVal;
 	[Export]
-	private Label label;
-	private AtlasTexture tex;
-	public byte selected
+	private Label _label;
+	private AtlasTexture _tex;
+	public byte Selected
 	{
-		get => currentVal;
+		get => _currentVal;
 		set
 		{
-			currentVal = value;
-			label.Text = currentVal.ToString("X");
-			var region =  new Rect2(VoxelBuilder.GetUVForByte(currentVal)*tex.Atlas.GetSize(), VoxelBuilder.TileSize*tex.Atlas.GetSize());
-			tex.Region = region;
+			_currentVal = value;
+			_label.Text = _currentVal.ToString("X");
+			var region =  new Rect2(VoxelBuilder.GetUvForByte(_currentVal)*_tex.Atlas.GetSize(), VoxelConstants.TileSize*_tex.Atlas.GetSize());
+			_tex.Region = region;
 		}
 	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		tex = Texture as AtlasTexture;
-		selected = currentVal;
+		_tex = Texture as AtlasTexture;
+		Selected = _currentVal;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

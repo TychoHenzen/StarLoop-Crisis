@@ -1,6 +1,6 @@
 using Godot;
 
-namespace A_Chat_Of_Goblins.Scripts.Tweening.Triggers;
+namespace StarLoop.Script.Signals.Triggers;
 
 public partial class AreaTrigger : Area3D
 {

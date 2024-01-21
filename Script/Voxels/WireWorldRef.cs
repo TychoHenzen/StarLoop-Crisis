@@ -1,24 +1,23 @@
-using System;
 using Godot;
 
-namespace StarLoop.Script;
+namespace StarLoop.Script.Voxels;
 
-public class WireworldRef
+public class WireWorldRef
 {
     public readonly VoxelChunk Chunk;
     public readonly Vector3 VoxelPos;
-    public readonly int Index;
-    public readonly byte OriginalValue;
+    private readonly int _index;
+    private readonly byte _originalValue;
     public byte CurrentValue;
     public byte NextValue;
 
-    public WireworldRef(Vector3 voxelPos,  VoxelChunk chunk, int index)
+    public WireWorldRef(Vector3 voxelPos,  VoxelChunk chunk, int index)
     {
         VoxelPos = voxelPos;
-        OriginalValue =  chunk.Voxels[index];
+        _originalValue =  chunk.Voxels[index];
         Chunk = chunk;
-        Index = index;
-        CurrentValue = OriginalValue;
+        _index = index;
+        CurrentValue = _originalValue;
         NextValue = CurrentValue;
     }
 
@@ -29,12 +28,12 @@ public class WireworldRef
         
         Chunk.Dirty = true;
         CurrentValue = NextValue;
-        Chunk.Voxels[Index] = CurrentValue;
+        Chunk.Voxels[_index] = CurrentValue;
     }
 
     public void PreSave()
     {
         Chunk.Dirty = true;
-        Chunk.Voxels[Index] = OriginalValue;
+        Chunk.Voxels[_index] = _originalValue;
     }
 }

@@ -1,5 +1,6 @@
 using Godot;
-using System;
+
+namespace StarLoop.Script.Signals.Triggers;
 
 public partial class Repeater : Node
 {

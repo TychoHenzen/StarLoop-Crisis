@@ -3,8 +3,8 @@ using System;
 
 public partial class CameraControl : Camera3D
 {
-    private float speed = 5.0f; // Camera movement speed
-    [Export] public CameraView CameraView;
+    private float _speed = 5.0f; // Camera movement speed
+    [Export] public StarLoop.Script.DebugCamera.CameraView CameraView;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -52,7 +52,7 @@ public partial class CameraControl : Camera3D
         direction = direction.Normalized();
 
         // Apply the movement
-        Translate(direction * speed * (float)delta);
+        Translate(direction * _speed * (float)delta);
     }
 
 }

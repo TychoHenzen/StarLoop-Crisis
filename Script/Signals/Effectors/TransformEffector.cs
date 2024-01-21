@@ -1,5 +1,7 @@
 using Godot;
-using System;
+using StarLoop.Script.Datatypes;
+
+namespace StarLoop.Script.Signals.Effectors;
 
 public partial class TransformEffector : Node3D
 {

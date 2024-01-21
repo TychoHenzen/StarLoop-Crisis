@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace StarLoop.Script;
+namespace StarLoop.Script.Voxels;
 
 public static class HexConvert
 {
-    public static Dictionary<int, byte> converter = new()
+    public static readonly Dictionary<int, byte> Converter = new()
     {
         { 0xFFFFFF, 0 },
         { 0xFFFFCC, 1 },

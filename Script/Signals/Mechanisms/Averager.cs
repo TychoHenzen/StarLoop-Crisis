@@ -1,29 +1,30 @@
 using Godot;
-using System;
+
+namespace StarLoop.Script.Signals.Mechanisms;
 
 public partial class Averager : Node
 {
-	private int count = 0;
-	private float sum = 0;
+	private int _count;
+	private float _sum;
 	[Signal]
-	public delegate void AverageEventHandler(float Average);
+	public delegate void AverageEventHandler(float average);
 
 	public void Add(float value)
 	{
-		sum += value;
-		count++;
+		_sum += value;
+		_count++;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (count == 0)
+		if (_count == 0)
 		{
-			sum++;
-			count++;
+			_sum++;
+			_count++;
 		}
-		EmitSignal(SignalName.Average, sum / count);
-		sum = 0;
-		count = 0;
+		EmitSignal(SignalName.Average, _sum / _count);
+		_sum = 0;
+		_count = 0;
 	}
 }

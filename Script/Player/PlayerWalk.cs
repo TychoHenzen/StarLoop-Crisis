@@ -1,11 +1,11 @@
 using Godot;
 using Godot.Collections;
 
-namespace A_Chat_Of_Goblins.Scripts.Player;
+namespace StarLoop.Script.Player;
 
 public partial class PlayerWalk : Node
 {
-    private const float BreakingForce = -0.5f;
+    private const float BrakingForce = -0.5f;
     private bool _isGrounded;
     [Export] public float Damp = 10;
     [Export] public float JumpForce = 3;
@@ -41,12 +41,12 @@ public partial class PlayerWalk : Node
         if (Input.IsActionPressed("move_forward") && currentForwardVelocity.Dot(forward) < 0 ||
             Input.IsActionPressed("move_backward") && currentForwardVelocity.Dot(forward) > 0)
         {
-            currentForwardVelocity *= BreakingForce; 
+            currentForwardVelocity *= BrakingForce; 
         }
         if (Input.IsActionPressed("move_right") && currentLateralVelocity.Dot(right) < 0 ||
             Input.IsActionPressed("move_left") && currentLateralVelocity.Dot(right) > 0)
         {
-            currentLateralVelocity *= BreakingForce; 
+            currentLateralVelocity *= BrakingForce; 
         }
         // Combine the adjusted velocities
         var adjustedVelocity = currentForwardVelocity + currentLateralVelocity;

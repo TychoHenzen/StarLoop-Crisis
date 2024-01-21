@@ -1,5 +1,6 @@
 using Godot;
-using System;
+
+namespace StarLoop.Script.Signals.Mechanisms;
 
 public partial class Tweener : Node
 {

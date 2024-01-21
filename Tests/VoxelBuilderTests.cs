@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using GdMUT;
 using Godot;
 using StarLoop.Script;
+using StarLoop.Script.Voxels;
 
 namespace StarLoop.Tests;
 
@@ -14,17 +15,17 @@ public static class VoxelBuilderTests
         //Arrange
         (int, int)[] values =
         {
-            (VoxelConstants.index(0, 0, 0), 0),
-            (VoxelConstants.index(VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize - 1),
+            (VoxelConstants.Index(0, 0, 0), 0),
+            (VoxelConstants.Index(VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize - 1),
                 VoxelConstants.ChunkVoxels-1),
-            (VoxelConstants.index(1, 2, 3),
-                VoxelConstants.chunkSize * VoxelConstants.chunkSize + VoxelConstants.chunkSize * 2 + 3),
-            (VoxelConstants.index(-1, 0, 0), -1),
-            (VoxelConstants.index(0, -1, 0), -1),
-            (VoxelConstants.index(0, 0, -1), -1),
-            (VoxelConstants.index(VoxelConstants.chunkSize, VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize - 1), -1),
-            (VoxelConstants.index(VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize, VoxelConstants.chunkSize - 1), -1),
-            (VoxelConstants.index(VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize), -1)
+            (VoxelConstants.Index(1, 2, 3),
+                VoxelConstants.ChunkSize * VoxelConstants.ChunkSize + VoxelConstants.ChunkSize * 2 + 3),
+            (VoxelConstants.Index(-1, 0, 0), -1),
+            (VoxelConstants.Index(0, -1, 0), -1),
+            (VoxelConstants.Index(0, 0, -1), -1),
+            (VoxelConstants.Index(VoxelConstants.ChunkSize, VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize - 1), -1),
+            (VoxelConstants.Index(VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize, VoxelConstants.ChunkSize - 1), -1),
+            (VoxelConstants.Index(VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize), -1)
         };
         //Act
         //Assert
@@ -52,9 +53,9 @@ public static class VoxelBuilderTests
     {
         (Vector3, Vector3)[] values =
         {
-            (new Vector3(0, 0, 0),VoxelConstants.reverseIndex( 0)),
-            (new Vector3(VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize - 1, VoxelConstants.chunkSize - 1), VoxelConstants.reverseIndex(VoxelConstants.ChunkVoxels-1)),
-            (new Vector3(1, 2, 3), VoxelConstants.reverseIndex(VoxelConstants.chunkSize * VoxelConstants.chunkSize + VoxelConstants.chunkSize * 2 + 3))
+            (new Vector3(0, 0, 0),VoxelConstants.ReverseIndex( 0)),
+            (new Vector3(VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize - 1, VoxelConstants.ChunkSize - 1), VoxelConstants.ReverseIndex(VoxelConstants.ChunkVoxels-1)),
+            (new Vector3(1, 2, 3), VoxelConstants.ReverseIndex(VoxelConstants.ChunkSize * VoxelConstants.ChunkSize + VoxelConstants.ChunkSize * 2 + 3))
         };
         //Act
         //Assert
@@ -67,6 +68,21 @@ public static class VoxelBuilderTests
         }
         return Result.Success;
     }
-    
+    [CSTestFunction]
+    public static Result Transition_Equality_Works_As_Expected()
+    {
+
+        WireWorldTransition t1 =
+            new WireWorldTransition(new[] { new Rule(Cell.Air, 1, 2)}, Cell.Wire, Cell.Text1, 0.1f );
+        
+        WireWorldTransition t2 =
+            new WireWorldTransition(new[] { new Rule(Cell.Air, 1, 2)}, Cell.Wire, Cell.Text1, 0.1f );
+        //Act
+        //Assert
+        if (t1.Equals(t2))
+            return Result.Success;
+        return Result.Failure;
+    }
+
     #endif
 }

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace A_Chat_Of_Goblins.Scripts.Player;
+namespace StarLoop.Script.Player;
 
 public partial class CameraViewer : Node
 {

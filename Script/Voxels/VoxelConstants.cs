@@ -4,27 +4,26 @@ namespace StarLoop.Script;
 
 public static class VoxelConstants
 {
-    public static int ChunkVoxels => chunkSize * chunkSize * chunkSize;
-    public const int chunkSize = 32;
+    public static int ChunkVoxels => ChunkSize * ChunkSize * ChunkSize;
+    public const int ChunkSize = 32;
     public const int VoxelScalar = 8;
-    public const int tilesPerRow = 16;
-    const float tileWidth = 1.0f / tilesPerRow;
-    const float tileHeight = 1.0f / tilesPerRow;
-    public static int index(int x, int y, int z)
+    public const int TilesPerRow = 16;
+    public static readonly Vector2 TileSize = new(1f / TilesPerRow, 1f / TilesPerRow);
+    public static int Index(int x, int y, int z)
     {
-        if (x < 0 || x >= chunkSize || y < 0 || y >= chunkSize || z < 0 || z >= chunkSize) return -1; 
-        return x * chunkSize * chunkSize + y * chunkSize + z;
+        if (x < 0 || x >= ChunkSize || y < 0 || y >= ChunkSize || z < 0 || z >= ChunkSize) return -1; 
+        return x * ChunkSize * ChunkSize + y * ChunkSize + z;
     }
-    public static int index(Vector3 pos)
+    public static int Index(Vector3 pos)
     {
-        return index((int)pos.X, (int)pos.Y, (int)pos.Z);
+        return Index((int)pos.X, (int)pos.Y, (int)pos.Z);
     }
-    public static Vector3 reverseIndex(int index)
+    public static Vector3 ReverseIndex(int index)
     {
-        int z = index % chunkSize;
-        index /= chunkSize;
-        int y = index % chunkSize;
-        index /= chunkSize;
+        int z = index % ChunkSize;
+        index /= ChunkSize;
+        int y = index % ChunkSize;
+        index /= ChunkSize;
         return new Vector3(index, y, z);
     }
 }

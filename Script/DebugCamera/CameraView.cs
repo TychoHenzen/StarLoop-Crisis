@@ -1,5 +1,7 @@
 using Godot;
-using System;
+
+namespace StarLoop.Script.DebugCamera;
+
 public partial class CameraView : Node
 {
 	[Export] public float SensitivityX = 0.01f;

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace A_Chat_Of_Goblins.Scripts.Extensions;
+namespace StarLoop.Script.Extensions;
 
 public static class NodeHelpers
 {
