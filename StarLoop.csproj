@@ -9,4 +9,7 @@
     <Content Include="Tests\TestVoxels\Test.gox" />
     <Content Include="Tests\TestVoxels\Test.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scene\"/>
+  </ItemGroup>
 </Project>

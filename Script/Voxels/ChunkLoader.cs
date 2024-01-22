@@ -8,6 +8,18 @@ namespace StarLoop.Script.Voxels;
 
 public static class ChunkLoader
 {
+    private static readonly Vector3[] Offsets =
+    {
+        new(0, 1, 0), //section 1, correct
+        new(1, 1, 0), //section 2, correct
+        new(1, 0, 0), //section 4, correct
+        new(0, 0, 0), //section 3, correct
+        new(0, 0, 1), //section 5, correct
+        new(0, 1, 1), // section 6
+        new(1, 1, 1), //section 7
+        new(1, 0, 1) // section 8
+    };
+
     public static byte[] LoadVoxelTextFile(FileAccess file)
     {
         byte[] voxels = new byte[VoxelConstants.ChunkVoxels];
@@ -25,21 +37,10 @@ public static class ChunkLoader
             voxels[index] = HexConvert.Converter[color];
         }
 
+
         file.Close();
         return voxels;
     }
-
-    private static Vector3[] offsets = new[]
-    {
-        new Vector3(0, 1, 0), //section 1, correct
-        new(1, 1, 0), //section 2, correct
-        new(1, 0, 0), //section 4, correct
-        new(0, 0, 0), //section 3, correct
-        new(0, 0, 1), //section 5, correct
-        new(0, 1, 1), // section 6
-        new(1, 1, 1), //section 7
-        new(1, 0, 1) // section 8
-    };
 
 
     public static byte[] LoadGoxFile(FileAccess file)
@@ -67,7 +68,7 @@ public static class ChunkLoader
                 posIndex /= 16;
                 var pz = posIndex;
 
-                var offset = offsets[index];
+                var offset = Offsets[index];
                 int vx = (int)(px + offset.X * 16);
                 int vy = (int)(py + offset.Y * 16);
                 int vz = (int)(pz + offset.Z * 16);
@@ -77,7 +78,7 @@ public static class ChunkLoader
                 if (HexConvert.Converter.TryGetValue((int)(color & 0x00FFFFFF), out var value))
                 {
                     var voxelIndex = VoxelConstants.Index(vy, vz, vx);
-                    if(voxelIndex != -1)
+                    if (voxelIndex != -1)
                         voxels[voxelIndex] = value;
                 }
             }

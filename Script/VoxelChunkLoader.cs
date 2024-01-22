@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
+using StarLoop.Script.Voxels;
 
 namespace StarLoop.Script;
 
@@ -8,9 +8,20 @@ namespace StarLoop.Script;
 public partial class VoxelChunkLoader : Node
 {
     [Export] public bool ShouldRun { get; set; }
+    [Export] public bool ShouldClear { get; set; }
 
     public override void _Process(double delta)
     {
+        if (ShouldClear)
+        {
+            if (!ShouldRun) return;
+
+            ShouldRun = false;
+            foreach (var chunk in GetChunks(GetTree().Root)) chunk.ClearChunk();
+
+            return;
+        }
+
         foreach (var chunk in GetChunks(GetTree().Root))
         {
             chunk.LoadIfChanged();
@@ -25,12 +36,12 @@ public partial class VoxelChunkLoader : Node
         }
     }
 
-    private IEnumerable<Voxels.VoxelChunk> GetChunks(Node rootNode)
+    private IEnumerable<VoxelChunk> GetChunks(Node rootNode)
     {
         foreach (var child in rootNode.GetChildren())
         {
             // Check if the child is of type VoxelChunk
-            if (child is Voxels.VoxelChunk chunk)
+            if (child is VoxelChunk chunk)
             {
                 yield return chunk;
             }
