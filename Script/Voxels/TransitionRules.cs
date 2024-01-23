@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Godot;
 using static StarLoop.Script.Voxels.Cell;
@@ -283,7 +284,7 @@ public enum Cell : byte
 public static class TransitionRules
 {
     private static Rule[] Always => System.Array.Empty<Rule>();
-    public static readonly Dictionary<byte, WireWorldTransition[]> Transitions = GenerateTransitions();
+    public static readonly ImmutableDictionary<byte, WireWorldTransition[]> Transitions = GenerateTransitions();
     
     private static float[] Odds => new [] { 1, 0.8f, 0.6f, 0.4f, 0.2f };
     private static Cell[] Wires => new [] { Wire, WireDecay1, WireDecay2, WireDecay3, WireDecay4 };
@@ -488,7 +489,7 @@ public static class TransitionRules
         YellowFilterGreenTailDecay4
     };
 
-    private static Dictionary<byte, WireWorldTransition[]> GenerateTransitions()
+    private static ImmutableDictionary<byte, WireWorldTransition[]> GenerateTransitions()
     {
         var returned = new List<WireWorldTransition>();
         returned.AddRange(SimpleWire(Wires, RedHeads, RedTails, Odds));
@@ -515,15 +516,141 @@ public static class TransitionRules
 
         returned.AddRange(Merge());
         returned.AddRange(Filter());
+        returned.AddRange(Decay());
+        returned.AddRange(Spread());
         GD.Print($"Found {returned.Count} entries");
         var ret =  returned.Distinct().ToArray();
         GD.Print($"trimmed to {ret.Length} entries");
         var results = new Dictionary<byte, WireWorldTransition[]>();
         for (byte b = 0; b < 255; b++)
         {
-            results.Add(b, ret.Where(transition => transition.Self == b).ToArray());
+            results.Add(b, ret.Where(transition => transition.Self == b).Reverse().ToArray());
         }
-        return results;
+        return results.ToImmutableDictionary();
+    }
+
+    private static IEnumerable<WireWorldTransition> Spread()
+    {
+        const float t1Spread = 0.001f;
+        const float t2Spread = 0.001f;
+        const float t3Spread = 0.001f;
+        yield return new(new Rule[] { new(WireDecay1, 1, 1) }, Wire, WireDecay1, t1Spread);
+        yield return new(new Rule[] { new(WireDecay1, 2, 2) }, Wire, WireDecay1, t2Spread);
+        yield return new(new Rule[] { new(WireDecay1, 3, 3) }, Wire, WireDecay1, t3Spread);
+        yield return new(new Rule[] { new(WireDecay2, 1, 1) }, WireDecay1, WireDecay2, t1Spread);
+        yield return new(new Rule[] { new(WireDecay2, 2, 2) }, WireDecay1, WireDecay2, t2Spread);
+        yield return new(new Rule[] { new(WireDecay2, 3, 3) }, WireDecay1, WireDecay2, t3Spread);
+        yield return new(new Rule[] { new(WireDecay3, 1, 1) }, WireDecay2, WireDecay3, t1Spread);
+        yield return new(new Rule[] { new(WireDecay3, 2, 2) }, WireDecay2, WireDecay3, t2Spread);
+        yield return new(new Rule[] { new(WireDecay3, 3, 3) }, WireDecay2, WireDecay3, t3Spread);
+        yield return new(new Rule[] { new(WireDecay4, 1, 1) }, WireDecay3, WireDecay4, t1Spread);
+        yield return new(new Rule[] { new(WireDecay4, 2, 2) }, WireDecay3, WireDecay4, t2Spread);
+        yield return new(new Rule[] { new(WireDecay4, 3, 3) }, WireDecay3, WireDecay4, t3Spread);
+        
+        yield return new(new Rule[] { new(RedFilterDecay1, 1, 1) }, RedFilter, RedFilterDecay1, t1Spread);
+        yield return new(new Rule[] { new(RedFilterDecay1, 2, 2) }, RedFilter, RedFilterDecay1, t2Spread);
+        yield return new(new Rule[] { new(RedFilterDecay1, 3, 3) }, RedFilter, RedFilterDecay1, t3Spread);
+        yield return new(new Rule[] { new(RedFilterDecay2, 1, 1) }, RedFilterDecay1, RedFilterDecay2, t1Spread);
+        yield return new(new Rule[] { new(RedFilterDecay2, 2, 2) }, RedFilterDecay1, RedFilterDecay2, t2Spread);
+        yield return new(new Rule[] { new(RedFilterDecay2, 3, 3) }, RedFilterDecay1, RedFilterDecay2, t3Spread);
+        yield return new(new Rule[] { new(RedFilterDecay3, 1, 1) }, RedFilterDecay2, RedFilterDecay3, t1Spread);
+        yield return new(new Rule[] { new(RedFilterDecay3, 2, 2) }, RedFilterDecay2, RedFilterDecay3, t2Spread);
+        yield return new(new Rule[] { new(RedFilterDecay3, 3, 3) }, RedFilterDecay2, RedFilterDecay3, t3Spread);
+        yield return new(new Rule[] { new(RedFilterDecay4, 1, 1) }, RedFilterDecay3, RedFilterDecay4, t1Spread);
+        yield return new(new Rule[] { new(RedFilterDecay4, 2, 2) }, RedFilterDecay3, RedFilterDecay4, t2Spread);
+        yield return new(new Rule[] { new(RedFilterDecay4, 3, 3) }, RedFilterDecay3, RedFilterDecay4, t3Spread);
+        
+        yield return new(new Rule[] { new(GreenFilterDecay1, 1, 1) }, GreenFilter, GreenFilterDecay1, t1Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay1, 2, 2) }, GreenFilter, GreenFilterDecay1, t2Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay1, 3, 3) }, GreenFilter, GreenFilterDecay1, t3Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay2, 1, 1) }, GreenFilterDecay1, GreenFilterDecay2, t1Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay2, 2, 2) }, GreenFilterDecay1, GreenFilterDecay2, t2Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay2, 3, 3) }, GreenFilterDecay1, GreenFilterDecay2, t3Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay3, 1, 1) }, GreenFilterDecay2, GreenFilterDecay3, t1Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay3, 2, 2) }, GreenFilterDecay2, GreenFilterDecay3, t2Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay3, 3, 3) }, GreenFilterDecay2, GreenFilterDecay3, t3Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay4, 1, 1) }, GreenFilterDecay3, GreenFilterDecay4, t1Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay4, 2, 2) }, GreenFilterDecay3, GreenFilterDecay4, t2Spread);
+        yield return new(new Rule[] { new(GreenFilterDecay4, 3, 3) }, GreenFilterDecay3, GreenFilterDecay4, t3Spread);
+        
+        yield return new(new Rule[] { new(BlueFilterDecay1, 1, 1) }, BlueFilter, BlueFilterDecay1, t1Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay1, 2, 2) }, BlueFilter, BlueFilterDecay1, t2Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay1, 3, 3) }, BlueFilter, BlueFilterDecay1, t3Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay2, 1, 1) }, BlueFilterDecay1, BlueFilterDecay2, t1Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay2, 2, 2) }, BlueFilterDecay1, BlueFilterDecay2, t2Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay2, 3, 3) }, BlueFilterDecay1, BlueFilterDecay2, t3Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay3, 1, 1) }, BlueFilterDecay2, BlueFilterDecay3, t1Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay3, 2, 2) }, BlueFilterDecay2, BlueFilterDecay3, t2Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay3, 3, 3) }, BlueFilterDecay2, BlueFilterDecay3, t3Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay4, 1, 1) }, BlueFilterDecay3, BlueFilterDecay4, t1Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay4, 2, 2) }, BlueFilterDecay3, BlueFilterDecay4, t2Spread);
+        yield return new(new Rule[] { new(BlueFilterDecay4, 3, 3) }, BlueFilterDecay3, BlueFilterDecay4, t3Spread);
+        
+        yield return new(new Rule[] { new(CyanFilterDecay1, 1, 1) }, CyanFilter, CyanFilterDecay1, t1Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay1, 2, 2) }, CyanFilter, CyanFilterDecay1, t2Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay1, 3, 3) }, CyanFilter, CyanFilterDecay1, t3Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay2, 1, 1) }, CyanFilterDecay1, CyanFilterDecay2, t1Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay2, 2, 2) }, CyanFilterDecay1, CyanFilterDecay2, t2Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay2, 3, 3) }, CyanFilterDecay1, CyanFilterDecay2, t3Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay3, 1, 1) }, CyanFilterDecay2, CyanFilterDecay3, t1Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay3, 2, 2) }, CyanFilterDecay2, CyanFilterDecay3, t2Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay3, 3, 3) }, CyanFilterDecay2, CyanFilterDecay3, t3Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay4, 1, 1) }, CyanFilterDecay3, CyanFilterDecay4, t1Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay4, 2, 2) }, CyanFilterDecay3, CyanFilterDecay4, t2Spread);
+        yield return new(new Rule[] { new(CyanFilterDecay4, 3, 3) }, CyanFilterDecay3, CyanFilterDecay4, t3Spread);
+        
+        yield return new(new Rule[] { new(MagentaFilterDecay1, 1, 1) }, MagentaFilter, MagentaFilterDecay1, t1Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay1, 2, 2) }, MagentaFilter, MagentaFilterDecay1, t2Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay1, 3, 3) }, MagentaFilter, MagentaFilterDecay1, t3Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay2, 1, 1) }, MagentaFilterDecay1, MagentaFilterDecay2, t1Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay2, 2, 2) }, MagentaFilterDecay1, MagentaFilterDecay2, t2Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay2, 3, 3) }, MagentaFilterDecay1, MagentaFilterDecay2, t3Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay3, 1, 1) }, MagentaFilterDecay2, MagentaFilterDecay3, t1Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay3, 2, 2) }, MagentaFilterDecay2, MagentaFilterDecay3, t2Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay3, 3, 3) }, MagentaFilterDecay2, MagentaFilterDecay3, t3Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay4, 1, 1) }, MagentaFilterDecay3, MagentaFilterDecay4, t1Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay4, 2, 2) }, MagentaFilterDecay3, MagentaFilterDecay4, t2Spread);
+        yield return new(new Rule[] { new(MagentaFilterDecay4, 3, 3) }, MagentaFilterDecay3, MagentaFilterDecay4, t3Spread);
+        
+        yield return new(new Rule[] { new(YellowFilterDecay1, 1, 1) }, YellowFilter, YellowFilterDecay1, t1Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay1, 2, 2) }, YellowFilter, YellowFilterDecay1, t2Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay1, 3, 3) }, YellowFilter, YellowFilterDecay1, t3Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay2, 1, 1) }, YellowFilterDecay1, YellowFilterDecay2, t1Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay2, 2, 2) }, YellowFilterDecay1, YellowFilterDecay2, t2Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay2, 3, 3) }, YellowFilterDecay1, YellowFilterDecay2, t3Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay3, 1, 1) }, YellowFilterDecay2, YellowFilterDecay3, t1Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay3, 2, 2) }, YellowFilterDecay2, YellowFilterDecay3, t2Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay3, 3, 3) }, YellowFilterDecay2, YellowFilterDecay3, t3Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay4, 1, 1) }, YellowFilterDecay3, YellowFilterDecay4, t1Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay4, 2, 2) }, YellowFilterDecay3, YellowFilterDecay4, t2Spread);
+        yield return new(new Rule[] { new(YellowFilterDecay4, 3, 3) }, YellowFilterDecay3, YellowFilterDecay4, t3Spread);
+    }
+
+    private static IEnumerable<WireWorldTransition> Decay()
+    {
+        yield return new(new Rule[] { new(RedHeadDecay1, 1, 2) }, WireDecay1, RedHeadDecay2, 0.001f);
+        yield return new(new Rule[] { new(GreenHeadDecay1, 1, 2) }, WireDecay1, GreenHeadDecay2, 0.001f);
+        yield return new(new Rule[] { new(BlueHeadDecay1, 1, 2) }, WireDecay1, BlueHeadDecay2, 0.001f);
+        yield return new(new Rule[] { new(CyanHeadDecay1, 1, 2) }, WireDecay1, CyanHeadDecay2, 0.001f);
+        yield return new(new Rule[] { new(MagentaHeadDecay1, 1, 2) }, WireDecay1, MagentaHeadDecay2, 0.001f);
+        yield return new(new Rule[] { new(YellowHeadDecay1, 1, 2) }, WireDecay1, YellowHeadDecay2, 0.001f);
+        yield return new(new Rule[] { new(WhiteHeadDecay1, 1, 2) }, WireDecay1, WhiteHeadDecay2, 0.001f);
+        
+        yield return new(new Rule[] { new(RedHeadDecay2, 1, 2) }, WireDecay2, RedHeadDecay3, 0.001f);
+        yield return new(new Rule[] { new(GreenHeadDecay2, 1, 2) }, WireDecay2, GreenHeadDecay3, 0.001f);
+        yield return new(new Rule[] { new(BlueHeadDecay2, 1, 2) }, WireDecay2, BlueHeadDecay3, 0.001f);
+        yield return new(new Rule[] { new(CyanHeadDecay2, 1, 2) }, WireDecay2, CyanHeadDecay3, 0.001f);
+        yield return new(new Rule[] { new(MagentaHeadDecay2, 1, 2) }, WireDecay2, MagentaHeadDecay3, 0.001f);
+        yield return new(new Rule[] { new(YellowHeadDecay2, 1, 2) }, WireDecay2, YellowHeadDecay3, 0.001f);
+        yield return new(new Rule[] { new(WhiteHeadDecay2, 1, 2) }, WireDecay2, WhiteHeadDecay3, 0.001f);
+        
+        yield return new(new Rule[] { new(RedHeadDecay3, 1, 2) }, WireDecay3, RedHeadDecay4, 0.001f);
+        yield return new(new Rule[] { new(GreenHeadDecay3, 1, 2) }, WireDecay3, GreenHeadDecay4, 0.001f);
+        yield return new(new Rule[] { new(BlueHeadDecay3, 1, 2) }, WireDecay3, BlueHeadDecay4, 0.001f);
+        yield return new(new Rule[] { new(CyanHeadDecay3, 1, 2) }, WireDecay3, CyanHeadDecay4, 0.001f);
+        yield return new(new Rule[] { new(MagentaHeadDecay3, 1, 2) }, WireDecay3, MagentaHeadDecay4, 0.001f);
+        yield return new(new Rule[] { new(YellowHeadDecay3, 1, 2) }, WireDecay3, YellowHeadDecay4, 0.001f);
+        yield return new(new Rule[] { new(WhiteHeadDecay3, 1, 2) }, WireDecay3, WhiteHeadDecay4, 0.001f);
     }
 
 
@@ -619,6 +746,36 @@ public static class TransitionRules
                     YellowFilterRedHeads[wireIndex], Odds[wireIndex]);
                 yield return new(new Rule[] { new(WhiteHeads[headIndex], 1, 2) }, YellowFilters[wireIndex],
                     YellowFilterYellowHeads[wireIndex], Odds[wireIndex]);
+                
+                
+                yield return new(new Rule[] { new(CyanHeads[headIndex], 1, 2) }, GreenTails[wireIndex],
+                    BlueHeads[wireIndex], Odds[wireIndex]);
+                yield return new(new Rule[] { new(CyanHeads[headIndex], 1, 2) }, BlueTails[wireIndex],
+                    GreenHeads[wireIndex], Odds[wireIndex]);
+                
+                yield return new(new Rule[] { new(MagentaHeads[headIndex], 1, 2) }, RedTails[wireIndex],
+                    BlueHeads[wireIndex], Odds[wireIndex]);
+                yield return new(new Rule[] { new(MagentaHeads[headIndex], 1, 2) }, BlueTails[wireIndex],
+                    RedHeads[wireIndex], Odds[wireIndex]);
+                
+                yield return new(new Rule[] { new(YellowHeads[headIndex], 1, 2) }, RedTails[wireIndex],
+                    GreenHeads[wireIndex], Odds[wireIndex]);
+                yield return new(new Rule[] { new(YellowHeads[headIndex], 1, 2) }, GreenTails[wireIndex],
+                    RedHeads[wireIndex], Odds[wireIndex]);
+                
+                yield return new(new Rule[] { new(WhiteHeads[headIndex], 1, 2) }, RedTails[wireIndex],
+                    CyanHeads[wireIndex], Odds[wireIndex]);
+                yield return new(new Rule[] { new(WhiteHeads[headIndex], 1, 2) }, GreenTails[wireIndex],
+                    MagentaHeads[wireIndex], Odds[wireIndex]);
+                yield return new(new Rule[] { new(WhiteHeads[headIndex], 1, 2) }, BlueTails[wireIndex],
+                    YellowHeads[wireIndex], Odds[wireIndex]);
+                
+                yield return new(new Rule[] { new(WhiteHeads[headIndex], 1, 2) }, CyanTails[wireIndex],
+                    RedHeads[wireIndex], Odds[wireIndex]);
+                yield return new(new Rule[] { new(WhiteHeads[headIndex], 1, 2) }, MagentaTails[wireIndex],
+                    GreenHeads[wireIndex], Odds[wireIndex]);
+                yield return new(new Rule[] { new(WhiteHeads[headIndex], 1, 2) }, YellowTails[wireIndex],
+                    BlueHeads[wireIndex], Odds[wireIndex]);
             }
         }
     }

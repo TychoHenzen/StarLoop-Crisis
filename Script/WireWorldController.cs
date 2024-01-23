@@ -51,7 +51,7 @@ public partial class WireWorldController : Node
                 .Select(voxels.GetVoxel)
                 .GroupBy(b => b)
                 .ToDictionary(bytes => bytes.Key, bytes => bytes.Count());
-            // somehow match this with rules to determine future state
+            
             var futures = TransitionRules.Transitions[entry.CurrentValue]
                 .Where(transition => Matches(transition, neighbors)).ToList();
 
@@ -73,9 +73,10 @@ public partial class WireWorldController : Node
                 }
                 default:
                 {
-                    foreach (var future in futures
-                                 .Where(future => !(Random.Shared.NextDouble() > future.Odds)))
+                    foreach (var future in futures)
                     {
+                        if (Random.Shared.NextDouble() > future.Odds) continue;
+                        
                         entry.NextValue = future.Result;
                         break;
                     }
