@@ -20,6 +20,7 @@ public static class ChunkLoader
         new(1, 0, 1) // section 8
     };
 
+
     public static byte[] LoadVoxelTextFile(FileAccess file)
     {
         byte[] voxels = new byte[VoxelConstants.ChunkVoxels];
