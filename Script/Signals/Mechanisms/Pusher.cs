@@ -5,29 +5,29 @@ namespace StarLoop.Script.Signals.Mechanisms;
 public partial class Pusher : Node
 {
     [Signal]
-    public delegate void OnStepEventHandler(float level);
+    public delegate void HitMaxEventHandler();
 
     [Signal]
     public delegate void HitMinEventHandler();
 
     [Signal]
-    public delegate void HitMaxEventHandler();
+    public delegate void OnStepEventHandler(float level);
 
-    [Export] public float MaxValue;
-    [Export] public float MinValue;
+    [Export] private float _currentT;
+    [Export] private float _lowerSpeed;
 
-    [Export] public float RaiseSpeed;
-    [Export] public float LowerSpeed;
+    [Export] private float _maxValue;
+    [Export] private float _minValue;
 
-    [Export] public float CurrentT;
+    [Export] private float _raiseSpeed;
 
     public void Raise(float value)
     {
-        CurrentT += value * RaiseSpeed;
-        if (!(CurrentT < 1))
+        _currentT += value * _raiseSpeed;
+        if (_currentT >= 1)
         {
             EmitSignal(SignalName.HitMax);
-            CurrentT = 1;
+            _currentT = 1;
         }
 
         OnSignal();
@@ -35,11 +35,11 @@ public partial class Pusher : Node
 
     public void Lower(float value)
     {
-        CurrentT -= value * LowerSpeed;
-        if (!(CurrentT > 0))
+        _currentT -= value * _lowerSpeed;
+        if (_currentT <= 0)
         {
             EmitSignal(SignalName.HitMin);
-            CurrentT = 0;
+            _currentT = 0;
         }
 
         OnSignal();
@@ -47,6 +47,6 @@ public partial class Pusher : Node
 
     public void OnSignal()
     {
-        EmitSignal(SignalName.OnStep, Mathf.Lerp(MinValue, MaxValue, CurrentT));
+        EmitSignal(SignalName.OnStep, Mathf.Lerp(_minValue, _maxValue, _currentT));
     }
 }

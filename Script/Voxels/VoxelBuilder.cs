@@ -7,18 +7,17 @@ namespace StarLoop.Script.Voxels;
 
 public static class VoxelBuilder
 {
-    // public const int VoxelScalar = 8;
-    // public static int ChunkVoxels => ChunkSize * ChunkSize * ChunkSize;
-    // 
-    //
-    // private const int ChunkSize = 32;
-    // private const int TilesPerRow = 16;
-    // private const float TileWidth = 1.0f / VoxelConstants.TilesPerRow;
-    // private const float TileHeight = 1.0f / TilesPerRow;
-
     private static readonly Vector2 Right = new(VoxelConstants.TileSize.X, 0);
     private static readonly Vector2 Bot = new(0, VoxelConstants.TileSize.Y);
     private static readonly Vector2 BotRight = new(VoxelConstants.TileSize.X, VoxelConstants.TileSize.Y);
+
+    private static Vector2[] _uvs;
+
+    private static List<Vector3> _vertices = new();
+    private static List<Vector3> _normals = new();
+    private static List<int> _indices = new();
+
+    private static int _vertexCount;
 
     public static ArrayMesh BuildMesh(byte[] voxelData)
     {
@@ -27,45 +26,44 @@ public static class VoxelBuilder
         var arrays = new Array();
         arrays.Resize((int)Mesh.ArrayType.Max);
 
-        var vertices = new List<Vector3>();
-        var normals = new List<Vector3>();
-        var indices = new List<int>();
-        var vertexCount = 0;
-        for (var x = 0; x < VoxelConstants.ChunkSize; x++)
+        _vertices = new List<Vector3>();
+        _normals = new List<Vector3>();
+        _indices = new List<int>();
+        _vertexCount = 0;
+        for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
         {
-            for (var y = 0; y < VoxelConstants.ChunkSize; y++)
+            for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
             {
-                for (var z = 0; z < VoxelConstants.ChunkSize; z++)
+                for (pos.Z = 0; pos.Z < VoxelConstants.ChunkSize; pos.Z++)
                 {
-                    if (voxelData[VoxelConstants.Index(x, y, z)] != 0)
-                        CreateCube(x, y, z, vertices, normals, indices, ref vertexCount, voxelData);
+                    if (voxelData[VoxelConstants.Index(pos)] != 0)
+                        MeshCube(pos, voxelData);
                 }
             }
         }
 
-        arrays[(int)Mesh.ArrayType.Vertex] = vertices.ToArray();
-        arrays[(int)Mesh.ArrayType.Index] = indices.ToArray();
-        arrays[(int)Mesh.ArrayType.Normal] = normals.ToArray();
+        arrays[(int)Mesh.ArrayType.Vertex] = _vertices.ToArray();
+        arrays[(int)Mesh.ArrayType.Index] = _indices.ToArray();
+        arrays[(int)Mesh.ArrayType.Normal] = _normals.ToArray();
         returned.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arrays);
         return returned;
     }
 
-    private static Vector2[] _uvs;
 
     public static void UpdateMeshTexture(ArrayMesh mesh, byte[] voxelData)
     {
         var arrays = mesh.SurfaceGetArrays(0);
 
-        var vertexCount = 0;
+        _vertexCount = 0;
         _uvs = arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
-        for (var x = 0; x < VoxelConstants.ChunkSize; x++)
+        for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
         {
-            for (var y = 0; y < VoxelConstants.ChunkSize; y++)
+            for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
             {
-                for (var z = 0; z < VoxelConstants.ChunkSize; z++)
+                for (pos.Z = 0; pos.Z < VoxelConstants.ChunkSize; pos.Z++)
                 {
-                    if (voxelData[VoxelConstants.Index(x, y, z)] != 0)
-                        CreateCube(x, y, z, _uvs, ref vertexCount, voxelData);
+                    if (voxelData[VoxelConstants.Index(pos)] != 0)
+                        TextureCube(pos, voxelData);
                 }
             }
         }
@@ -82,164 +80,158 @@ public static class VoxelBuilder
         var arrays = new Array();
         arrays.Resize((int)Mesh.ArrayType.Max);
 
-        var vertices = new List<Vector3>();
-        var normals = new List<Vector3>();
-        var indices = new List<int>();
-        var vertexCount = 0;
-        for (var x = 0; x < VoxelConstants.ChunkSize; x++)
+        _vertices = new List<Vector3>();
+        _normals = new List<Vector3>();
+        _indices = new List<int>();
+        _vertexCount = 0;
+        for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
         {
-            for (var y = 0; y < VoxelConstants.ChunkSize; y++)
+            for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
             {
-                for (var z = 0; z < VoxelConstants.ChunkSize; z++)
+                for (pos.Z = 0; pos.Z < VoxelConstants.ChunkSize; pos.Z++)
                 {
-                    if (voxelData[VoxelConstants.Index(x, y, z)] != 0)
-                        CreateCube(x, y, z, vertices, normals, indices, ref vertexCount, voxelData);
+                    if (voxelData[VoxelConstants.Index(pos)] != 0)
+                        MeshCube(pos, voxelData);
                 }
             }
         }
 
-        returned.Data = indices.Select(i => vertices[i]).ToArray();
+        returned.Data = _indices.Select(i => _vertices[i]).ToArray();
         return returned;
     }
 
 
-    private static void CreateCube(int x, int y, int z, Vector2[] uvs, ref int vertexCount, byte[] voxelData)
+    private static void TextureCube(Vector3I pos, byte[] voxelData)
     {
-        var selfIndex = VoxelConstants.Index(x, y, z);
+        var selfIndex = VoxelConstants.Index(pos);
         var faceColor = GetUvForByte(voxelData[selfIndex]);
 
-        var indexer = VoxelConstants.Index(x, y, z + 1);
+        var indexer = VoxelConstants.Index(pos, z: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(faceColor, ref vertexCount);
+            TextureFace(faceColor);
         // Back face
 
-        indexer = VoxelConstants.Index(x, y, z - 1);
+        indexer = VoxelConstants.Index(pos, z: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(faceColor, ref vertexCount);
+            TextureFace(faceColor);
 
 // Left face
-        indexer = VoxelConstants.Index(x - 1, y, z);
+        indexer = VoxelConstants.Index(pos, -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(faceColor, ref vertexCount);
+            TextureFace(faceColor);
 
 // Right face
-        indexer = VoxelConstants.Index(x + 1, y, z);
+        indexer = VoxelConstants.Index(pos, +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(faceColor, ref vertexCount);
+            TextureFace(faceColor);
 
 // Top face
-        indexer = VoxelConstants.Index(x, y + 1, z);
+        indexer = VoxelConstants.Index(pos, y: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(faceColor, ref vertexCount);
+            TextureFace(faceColor);
 
 // Bottom face
-        indexer = VoxelConstants.Index(x, y - 1, z);
+        indexer = VoxelConstants.Index(pos, y: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(faceColor, ref vertexCount);
-        return;
-
-        // Helper function to add a face
-        void AddFace(Vector2 uv, ref int i)
-        {
-            uvs[i++] = uv + Right; // Bottom-right
-            uvs[i++] = uv; // Bottom-left
-            uvs[i++] = uv + BotRight; // Top-right
-            uvs[i++] = uv + Bot; // Top-left
-        }
+            TextureFace(faceColor);
     }
 
-    private static void CreateCube(int x, int y, int z, List<Vector3> vertices, List<Vector3> normals,
-        List<int> indices,
-        ref int vertexCount, byte[] voxelData)
+// Helper function to add a face
+    private static void TextureFace(Vector2 uv)
     {
-        var selfIndex = VoxelConstants.Index(x, y, z);
-        var indexer = VoxelConstants.Index(x, y, z + 1);
+        _uvs[_vertexCount++] = uv + Right; // Bottom-right
+        _uvs[_vertexCount++] = uv; // Bottom-left
+        _uvs[_vertexCount++] = uv + BotRight; // Top-right
+        _uvs[_vertexCount++] = uv + Bot; // Top-left
+    }
+
+    private static void MeshCube(Vector3I pos, IReadOnlyList<byte> voxelData)
+    {
+        var selfIndex = VoxelConstants.Index(pos);
+        var indexer = VoxelConstants.Index(pos, z: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(new Vector3[]
-                {
-                    new(x, y, z + 1), // New Bottom-left
-                    new(x + 1, y, z + 1), // New Top-left
-                    new(x, y + 1, z + 1), // New Bottom-right
-                    new(x + 1, y + 1, z + 1) // New Top-right
-                }
-                , ref vertexCount);
+            RenderFace(new[]
+            {
+                pos + new Vector3(0, 0, 1),
+                pos + new Vector3(1, 0, 1),
+                pos + new Vector3(0, 1, 1),
+                pos + new Vector3(1, 1, 1)
+            });
         // Back face
 
-        indexer = VoxelConstants.Index(x, y, z - 1);
+        indexer = VoxelConstants.Index(pos, z: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(new Vector3[]
+            RenderFace(new[]
             {
-                new(x + 1, y, z),
-                new(x, y, z),
-                new(x + 1, y + 1, z),
-                new(x, y + 1, z)
-            }, ref vertexCount);
+                pos + new Vector3(1, 0, 0),
+                pos + new Vector3(0, 0, 0),
+                pos + new Vector3(1, 1, 0),
+                pos + new Vector3(0, 1, 0)
+            });
 
 // Left face
 
-        indexer = VoxelConstants.Index(x - 1, y, z);
+        indexer = VoxelConstants.Index(pos, -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(new Vector3[]
+            RenderFace(new[]
             {
-                new(x, y, z),
-                new(x, y, z + 1),
-                new(x, y + 1, z),
-                new(x, y + 1, z + 1)
-            }, ref vertexCount);
+                pos + new Vector3(0, 0, 0),
+                pos + new Vector3(0, 0, 1),
+                pos + new Vector3(0, 1, 0),
+                pos + new Vector3(0, 1, 1)
+            });
 
 // Right face
-        indexer = VoxelConstants.Index(x + 1, y, z);
+        indexer = VoxelConstants.Index(pos, +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(new Vector3[]
+            RenderFace(new[]
             {
-                new(x + 1, y, z + 1),
-                new(x + 1, y, z),
-                new(x + 1, y + 1, z + 1),
-                new(x + 1, y + 1, z)
-            }, ref vertexCount);
+                pos + new Vector3(1, 0, 1),
+                pos + new Vector3(1, 0, 0),
+                pos + new Vector3(1, 1, 1),
+                pos + new Vector3(1, 1, 0)
+            });
 
 // Top face
-        indexer = VoxelConstants.Index(x, y + 1, z);
+        indexer = VoxelConstants.Index(pos, y: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(new Vector3[]
+            RenderFace(new[]
             {
-                new(x, y + 1, z),
-                new(x, y + 1, z + 1),
-                new(x + 1, y + 1, z),
-                new(x + 1, y + 1, z + 1)
-            }, ref vertexCount);
+                pos + new Vector3(0, 1, 0),
+                pos + new Vector3(0, 1, 1),
+                pos + new Vector3(1, 1, 0),
+                pos + new Vector3(1, 1, 1)
+            });
 
 // Bottom face
-        indexer = VoxelConstants.Index(x, y - 1, z);
+        indexer = VoxelConstants.Index(pos, y: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            AddFace(new Vector3[]
+            RenderFace(new[]
             {
-                new(x, y, z),
-                new(x + 1, y, z),
-                new(x, y, z + 1),
-                new(x + 1, y, z + 1)
-            }, ref vertexCount);
-        return;
-
-        // Helper function to add a face
-        void AddFace(Vector3[] faceVertices, ref int vertexCount)
-        {
-            vertices.AddRange(faceVertices.Select(vector3 => vector3
-                                                             / VoxelConstants.VoxelScalar));
-            var i = vertexCount;
-            indices.AddRange(new[] { 2, 1, 0, 2, 3, 1 }.Select(index => index + i));
-            vertexCount += faceVertices.Length;
-
-            // Calculate normals using the cross product
-            var edge1 = faceVertices[1] - faceVertices[0];
-            var edge2 = faceVertices[2] - faceVertices[0];
-            var normal = edge1.Cross(edge2).Normalized();
-
-            normals.AddRange(new[] { normal, normal, normal, normal });
-        }
+                pos + new Vector3(0, 0, 0),
+                pos + new Vector3(1, 0, 0),
+                pos + new Vector3(0, 0, 1),
+                pos + new Vector3(1, 0, 1)
+            });
     }
 
-    private static bool ShouldRender(byte[] voxelData, int indexer, int selfIndex)
+    private static void RenderFace(IReadOnlyList<Vector3> faceVertices)
+    {
+        _vertices.AddRange(faceVertices.Select(vector3 => vector3
+                                                          / VoxelConstants.VoxelScalar));
+        var i = _vertexCount;
+        _indices.AddRange(new[] { 2, 1, 0, 2, 3, 1 }.Select(index => index + i));
+        _vertexCount += faceVertices.Count;
+
+        // Calculate normals using the cross product
+        var edge1 = faceVertices[1] - faceVertices[0];
+        var edge2 = faceVertices[2] - faceVertices[0];
+        var normal = edge1.Cross(edge2).Normalized();
+
+        _normals.AddRange(new[] { normal, normal, normal, normal });
+    }
+
+    private static bool ShouldRender(IReadOnlyList<byte> voxelData, int indexer, int selfIndex)
     {
         return indexer < 0 || voxelData[indexer] == (int)Cell.Air ||
                (voxelData[indexer] == (int)Cell.Glass && voxelData[selfIndex] != (int)Cell.Glass);

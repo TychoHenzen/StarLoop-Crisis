@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,17 +24,22 @@ public static class ChunkLoader
 
     public static byte[] LoadVoxelTextFile(FileAccess file)
     {
-        byte[] voxels = new byte[VoxelConstants.ChunkVoxels];
+        var voxels = new byte[VoxelConstants.ChunkVoxels];
         while (!file.EofReached())
         {
-            string line = file.GetLine();
+            var line = file.GetLine();
             if (line.Contains('#') || line.Trim().Length == 0) continue;
-            string[] values = line.Split(' ');
-            int x = int.Parse(values[0]) + 16;
-            int y = int.Parse(values[1]) + 16;
-            int z = int.Parse(values[2]);
-            int color = int.Parse(values[3], NumberStyles.HexNumber);
-            var index = VoxelConstants.Index(y, z, x);
+
+            var values = line.Split(' ');
+            var x = int.Parse(values[0]) + 16;
+            var y = int.Parse(values[1]) + 16;
+            var z = int.Parse(values[2]);
+            var color = int.Parse(values[3], NumberStyles.HexNumber);
+            var tmp = x;
+            x = y;
+            y = z;
+            z = tmp;
+            var index = VoxelConstants.Index(new Vector3I(x, y, z));
             GD.Print($"Text: [{x}, {y}, {z}]: {color:X}");
             voxels[index] = HexConvert.Converter[color];
         }
@@ -46,8 +52,8 @@ public static class ChunkLoader
 
     public static byte[] LoadGoxFile(FileAccess file)
     {
-        byte[] voxels = new byte[VoxelConstants.ChunkVoxels];
-        int index = 0;
+        var voxels = new byte[VoxelConstants.ChunkVoxels];
+        var index = 0;
         while (!file.EofReached())
         {
             SeekString(file, "BL16");
@@ -58,38 +64,47 @@ public static class ChunkLoader
             var img = new Image();
             img.LoadPngFromBuffer(pngFile);
 
-            for (int x = 0; x < 64; x++)
-            for (int y = 0; y < 64; y++)
-            {
-                // Calculate the corresponding x, y coordinates in the 64x64 image
-                var posIndex = x + 64 * y;
-                int px = posIndex % 16;
-                posIndex /= 16;
-                int py = posIndex % 16;
-                posIndex /= 16;
-                var pz = posIndex;
-
-                var offset = Offsets[index];
-                int vx = (int)(px + offset.X * 16);
-                int vy = (int)(py + offset.Y * 16);
-                int vz = (int)(pz + offset.Z * 16);
-                var color = img.GetPixel(x, y).ToArgb32();
-                if ((color & 0xFF000000) == 0)
-                    color = 0xff_ff_ff;
-                if (HexConvert.Converter.TryGetValue((int)(color & 0x00FFFFFF), out var value))
-                {
-                    var voxelIndex = VoxelConstants.Index(vy, vz, vx);
-                    if (voxelIndex != -1)
-                        voxels[voxelIndex] = value;
-                }
-            }
-
-            if (++index >= 8)
-                break;
+            LoadImage(index, img, voxels);
+            ++index;
         }
 
         file.Close();
         return voxels;
+    }
+
+    private static void LoadImage(int index, Image img, IList<byte> voxels)
+    {
+        for (var coordinate = new Vector2I(); coordinate.X < 64; coordinate.X++)
+        {
+            for (coordinate.Y = 0; coordinate.Y < 64; coordinate.Y++)
+            {
+                ParsePixel(index, img, voxels, coordinate);
+            }
+        }
+    }
+
+    private static void ParsePixel(int index, Image img, IList<byte> voxels, Vector2I coordinate)
+    {
+        // Calculate the corresponding x, y coordinates in the 64x64 image
+        var posIndex = coordinate.X + 64 * coordinate.Y;
+        var px = posIndex % 16;
+        posIndex /= 16;
+        var py = posIndex % 16;
+        posIndex /= 16;
+        var pz = posIndex;
+
+        var offset = Offsets[index];
+        var vx = (int)(px + offset.X * 16);
+        var vy = (int)(py + offset.Y * 16);
+        var vz = (int)(pz + offset.Z * 16);
+        var color = img.GetPixel(coordinate.X, coordinate.Y).ToArgb32();
+        if ((color & 0xFF000000) == 0)
+            color = 0xff_ff_ff;
+        if (!HexConvert.Converter.TryGetValue((int)(color & 0x00FFFFFF), out var value)) return;
+
+        var voxelIndex = VoxelConstants.Index(vy, vz, vx);
+        if (voxelIndex != -1)
+            voxels[voxelIndex] = value;
     }
 
     private static void SeekString(FileAccess file, string match)

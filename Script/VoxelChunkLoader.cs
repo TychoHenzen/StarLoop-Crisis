@@ -7,8 +7,8 @@ namespace StarLoop.Script;
 [Tool]
 public partial class VoxelChunkLoader : Node
 {
-    [Export] public bool ShouldRun { get; set; }
-    [Export] public bool ShouldClear { get; set; }
+    [Export] private bool ShouldRun { get; set; }
+    [Export] private bool ShouldClear { get; set; }
 
     public override void _Process(double delta)
     {

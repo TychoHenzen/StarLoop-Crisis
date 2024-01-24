@@ -1,10 +1,11 @@
 using Godot;
-using System;
+
+namespace StarLoop.Script.DebugCamera;
 
 public partial class CameraControl : Camera3D
 {
     private float _speed = 5.0f; // Camera movement speed
-    [Export] public StarLoop.Script.DebugCamera.CameraView CameraView;
+    [Export] private CameraView CameraView { get; } = null;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -12,9 +13,9 @@ public partial class CameraControl : Camera3D
         Input.MouseMode = Input.MouseModeEnum.Captured; // Capture the mouse
     }
 
-    public override void _Input(InputEvent toHandle)
+    public override void _Input(InputEvent @event)
     {
-        switch (toHandle)
+        switch (@event)
         {
             case InputEventMouseMotion eventMouseMotion:
                 CameraView.HandleMouseInput(eventMouseMotion, this);
@@ -26,6 +27,7 @@ public partial class CameraControl : Camera3D
             }
         }
     }
+
 // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
@@ -34,7 +36,7 @@ public partial class CameraControl : Camera3D
             Input.MouseMode = Input.MouseModeEnum.Visible;
         }
 
-        Vector3 direction = new Vector3();
+        var direction = new Vector3();
 
         // Forward and backward movement (along the global Z-axis)
         if (Input.IsKeyPressed(Key.W)) direction += Vector3.Forward;
@@ -54,5 +56,4 @@ public partial class CameraControl : Camera3D
         // Apply the movement
         Translate(direction * _speed * (float)delta);
     }
-
 }

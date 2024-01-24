@@ -6,11 +6,11 @@ namespace StarLoop.Script.Player;
 public partial class PlayerWalk : Node
 {
     private const float BrakingForce = -0.5f;
+    [Export] private float _damp = 10;
     private bool _isGrounded;
-    [Export] public float Damp = 10;
-    [Export] public float JumpForce = 3;
-    [Export] public float MoveSpeed = 10;
-    [Export] public float SprintSpeed = 20;
+    [Export] private float _jumpForce = 3;
+    [Export] private float _moveSpeed = 10;
+    [Export] private float _sprintSpeed = 20;
 
     public void HandleInputs(PhysicsDirectBodyState3D state, RigidBody3D mainCamera)
     {
@@ -19,48 +19,66 @@ public partial class PlayerWalk : Node
         var currentVelocity = state.LinearVelocity;
         var targetVelocity = Vector3.Zero;
 
-        // Calculate the target velocity based on input
-        if (Input.IsActionPressed("move_forward"))
-            targetVelocity += forward * MoveSpeed;
-        if (Input.IsActionPressed("move_backward"))
-            targetVelocity -= forward * MoveSpeed;
-        if (Input.IsActionPressed("move_right"))
-            targetVelocity += right * MoveSpeed;
-        if (Input.IsActionPressed("move_left"))
-            targetVelocity -= right * MoveSpeed;
-
-        // Apply sprint speed if sprinting
-        if (Input.IsActionPressed("sprint"))
-            targetVelocity *= SprintSpeed / MoveSpeed;
+        targetVelocity = HandleInput(targetVelocity, forward, right);
 
         // Extract the current forward and lateral velocities
         var currentForwardVelocity = forward * forward.Dot(currentVelocity);
         var currentLateralVelocity = right * right.Dot(currentVelocity);
 
         // Apply a more immediate change in direction if the input is opposite to the current velocity
-        if (Input.IsActionPressed("move_forward") && currentForwardVelocity.Dot(forward) < 0 ||
-            Input.IsActionPressed("move_backward") && currentForwardVelocity.Dot(forward) > 0)
-        {
-            currentForwardVelocity *= BrakingForce; 
-        }
-        if (Input.IsActionPressed("move_right") && currentLateralVelocity.Dot(right) < 0 ||
-            Input.IsActionPressed("move_left") && currentLateralVelocity.Dot(right) > 0)
-        {
-            currentLateralVelocity *= BrakingForce; 
-        }
+        currentForwardVelocity = BrakeVelocity(currentForwardVelocity, forward, right, ref currentLateralVelocity);
         // Combine the adjusted velocities
-        var adjustedVelocity = currentForwardVelocity + currentLateralVelocity;
-        adjustedVelocity.Y = currentVelocity.Y; // Maintain the Y velocity including gravity
-        var finalVelocity = adjustedVelocity.Lerp(targetVelocity, Damp * state.Step);
-        state.LinearVelocity = new Vector3(finalVelocity.X, state.LinearVelocity.Y, finalVelocity.Z);
+        Dampening(state, currentForwardVelocity, currentLateralVelocity, currentVelocity, targetVelocity);
 
         // Ground check and jumping
         _isGrounded = IsOnFloor(state);
         if (_isGrounded && Input.IsActionJustPressed("jump"))
         {
             // Override the Y velocity for jumping
-            state.LinearVelocity = new Vector3(state.LinearVelocity.X, JumpForce, state.LinearVelocity.Z);
+            state.LinearVelocity = new Vector3(state.LinearVelocity.X, _jumpForce, state.LinearVelocity.Z);
         }
+    }
+
+    private Vector3 HandleInput(Vector3 targetVelocity, Vector3 forward, Vector3 right)
+    {
+        // Calculate the target velocity based on input
+        if (Input.IsActionPressed("move_forward"))
+            targetVelocity += forward * _moveSpeed;
+        if (Input.IsActionPressed("move_backward"))
+            targetVelocity -= forward * _moveSpeed;
+        if (Input.IsActionPressed("move_right"))
+            targetVelocity += right * _moveSpeed;
+        if (Input.IsActionPressed("move_left"))
+            targetVelocity -= right * _moveSpeed;
+
+        // Apply sprint speed if sprinting
+        if (Input.IsActionPressed("sprint"))
+            targetVelocity *= _sprintSpeed / _moveSpeed;
+        return targetVelocity;
+    }
+
+    private void Dampening(PhysicsDirectBodyState3D state, Vector3 currentForwardVelocity,
+        Vector3 currentLateralVelocity,
+        Vector3 currentVelocity, Vector3 targetVelocity)
+    {
+        var adjustedVelocity = currentForwardVelocity + currentLateralVelocity;
+        adjustedVelocity.Y = currentVelocity.Y; // Maintain the Y velocity including gravity
+        var finalVelocity = adjustedVelocity.Lerp(targetVelocity, _damp * state.Step);
+        state.LinearVelocity = new Vector3(finalVelocity.X, state.LinearVelocity.Y, finalVelocity.Z);
+    }
+
+    private static Vector3 BrakeVelocity(Vector3 currentForwardVelocity, Vector3 forward, Vector3 right,
+        ref Vector3 currentLateralVelocity)
+    {
+        if ((Input.IsActionPressed("move_forward") && currentForwardVelocity.Dot(forward) < 0) ||
+            (Input.IsActionPressed("move_backward") && currentForwardVelocity.Dot(forward) > 0))
+            currentForwardVelocity *= BrakingForce;
+
+        if ((Input.IsActionPressed("move_right") && currentLateralVelocity.Dot(right) < 0) ||
+            (Input.IsActionPressed("move_left") && currentLateralVelocity.Dot(right) > 0))
+            currentLateralVelocity *= BrakingForce;
+
+        return currentForwardVelocity;
     }
 
 

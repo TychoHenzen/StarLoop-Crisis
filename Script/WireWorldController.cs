@@ -9,9 +9,7 @@ namespace StarLoop.Script;
 
 public partial class WireWorldController : Node
 {
-    private readonly List<WireWorldRef> _wireWorldVoxels = new();
-
-    private static readonly Vector3[] Offsets =
+    private static readonly Vector3I[] Offsets =
     {
         new(-1, -1, -1), new(-1, -1, 0), new(-1, -1, 1),
         new(-1, 0, -1), new(-1, 0, 0), new(-1, 0, 1),
@@ -26,7 +24,10 @@ public partial class WireWorldController : Node
         new(1, 1, -1), new(1, 1, 0), new(1, 1, 1)
     };
 
-    public void Register(Vector3 position, VoxelChunk chunk)
+    private readonly List<WireWorldRef> _wireWorldVoxels = new();
+    public static int Step { get; private set; }
+
+    public void Register(Vector3I position, VoxelChunk chunk)
     {
         _wireWorldVoxels.RemoveAll(obj =>
             obj.Chunk == chunk);
@@ -51,41 +52,11 @@ public partial class WireWorldController : Node
                 .Select(voxels.GetVoxel)
                 .GroupBy(b => b)
                 .ToDictionary(bytes => bytes.Key, bytes => bytes.Count());
-            
+
             var futures = TransitionRules.Transitions[entry.CurrentValue]
                 .Where(transition => Matches(transition, neighbors)).ToList();
-            
-            switch (futures.Count)
-            {
-                case 0:
-                    // No change to entry.NextValue
-                    break;
-                case 1:
-                {
-                    var future = futures[0];
-                    if (Random.Shared.NextDouble() < future.Odds)
-                    {
-                        entry.NextValue = future.Result;
-                    }
 
-                    // Otherwise, no change to entry.NextValue
-                    break;
-                }
-                default:
-                {
-                    foreach (var future in futures)
-                    {
-                        if (Random.Shared.NextDouble() > future.Odds) continue;
-                        
-                        entry.NextValue = future.Result;
-                        break;
-                    }
-
-                    // Roll the odds again for the selected transition
-                    // Otherwise, no change to entry.NextValue
-                    break;
-                }
-            }
+            ParseTransition(futures, entry);
         });
 
         foreach (var t in _wireWorldVoxels)
@@ -94,25 +65,39 @@ public partial class WireWorldController : Node
         }
 
         voxels.RedrawDirty(this);
+        Step++;
     }
 
-    private static bool Matches(WireWorldTransition transition, Dictionary<byte, int> neighbors)
+    private static void ParseTransition(IReadOnlyList<WireWorldTransition> futures, WireWorldRef entry)
+    {
+        switch (futures.Count)
+        {
+            case 0:
+                // No change to entry.NextValue
+                break;
+            case 1:
+            {
+                var future = futures[0];
+                if (future.Odds(Random.Shared.NextDouble())) entry.NextValue = future.Result;
+                break;
+            }
+            default:
+            {
+                entry.NextValue = futures
+                    .FirstOrDefault(future => !future.Odds(Random.Shared.NextDouble()),
+                        new WireWorldTransition(null, 0, entry.NextValue)).Result;
+                break;
+            }
+        }
+    }
+
+    private static bool Matches(WireWorldTransition transition, IReadOnlyDictionary<byte, int> neighbors)
     {
         foreach (var rule in transition.Neighbors)
         {
-            if (!neighbors.TryGetValue(rule.Type, out int count) || count < rule.Min || count > rule.Max) return false;
+            if (!neighbors.TryGetValue(rule.Type, out var count) || count < rule.Min || count > rule.Max) return false;
         }
 
         return true;
-    }
-
-    public void PreSave(VoxelController voxels)
-    {
-        foreach (var voxel in _wireWorldVoxels)
-        {
-            voxel.PreSave();
-        }
-
-        voxels.RedrawDirty(this);
     }
 }

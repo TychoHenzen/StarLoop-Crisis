@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace StarLoop.Script.Voxels;
 
 public static class HexConvert
 {
-    public static readonly Dictionary<int, byte> Converter = new()
+    public static readonly ImmutableDictionary<int, byte> Converter = new Dictionary<int, byte>
     {
         { 0xFFFFFF, 0 },
         { 0xFFFFCC, 1 },
@@ -262,5 +263,5 @@ public static class HexConvert
         { 0x222222, 253 },
         { 0x111111, 254 },
         { 0x000000, 255 }
-    };
+    }.ToImmutableDictionary();
 }

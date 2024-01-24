@@ -14,6 +14,7 @@ public readonly struct Rule : IEquatable<Rule>
         Min = min;
         Max = max;
     }
+
     public Rule(Cell type, byte min, byte max)
     {
         Type = (byte)type;
@@ -34,5 +35,15 @@ public readonly struct Rule : IEquatable<Rule>
     public override int GetHashCode()
     {
         return HashCode.Combine(Type, Min, Max);
+    }
+
+    public static bool operator ==(Rule left, Rule right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Rule left, Rule right)
+    {
+        return !(left == right);
     }
 }

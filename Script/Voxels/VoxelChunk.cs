@@ -7,19 +7,19 @@ namespace StarLoop.Script.Voxels;
 [Tool]
 public partial class VoxelChunk : MeshInstance3D
 {
-    [Export] private Vector3 _chunkPos;
+    [Export] private Vector3I _chunkPos;
 
     private CollisionShape3D _collider;
     private string _hash = "";
     private ArrayMesh _myMesh;
-    public bool Dirty;
-    public byte[] Voxels;
+    public bool Dirty { get; set; } = true;
+    public byte[] Voxels { get; private set; } = Array.Empty<byte>();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         _collider = GetParent<CollisionShape3D>();
-        _chunkPos = (GlobalPosition / (VoxelConstants.VoxelScalar / 2f)).Floor();
+        _chunkPos = (Vector3I)(GlobalPosition / (VoxelConstants.VoxelScalar / 2f)).Floor();
 
         LoadChunk();
     }
