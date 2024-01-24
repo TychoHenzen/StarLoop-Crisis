@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Godot;
 using StarLoop.Script.Voxels;
 
 namespace StarLoop.Script;
@@ -49,9 +44,7 @@ public partial class WireWorldController : Node
         {
             var neighbors = Offsets
                 .Select(offset => entry.VoxelPos + offset)
-                .Select(voxels.GetVoxel)
-                .GroupBy(b => b)
-                .ToDictionary(bytes => bytes.Key, bytes => bytes.Count());
+                .Select(voxels.GetVoxel).ToArray();
 
             var futures = TransitionRules.Transitions[entry.CurrentValue]
                 .Where(transition => Matches(transition, neighbors)).ToList();
@@ -91,11 +84,13 @@ public partial class WireWorldController : Node
         }
     }
 
-    private static bool Matches(WireWorldTransition transition, IReadOnlyDictionary<byte, int> neighbors)
+    private static bool Matches(WireWorldTransition transition, byte[] neighbors)
     {
         foreach (var rule in transition.Neighbors)
         {
-            if (!neighbors.TryGetValue(rule.Type, out var count) || count < rule.Min || count > rule.Max) return false;
+            var count = neighbors.Count(b => b == rule.Type);
+            if (count < rule.Min || count > rule.Max)
+                return false;
         }
 
         return true;

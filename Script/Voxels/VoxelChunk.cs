@@ -1,17 +1,15 @@
-using System;
-using Godot;
-using FileAccess = Godot.FileAccess;
-
 namespace StarLoop.Script.Voxels;
 
 [Tool]
 public partial class VoxelChunk : MeshInstance3D
 {
+    private Godot.Collections.Array _arrays;
     [Export] private Vector3I _chunkPos;
 
     private CollisionShape3D _collider;
     private string _hash = "";
     private ArrayMesh _myMesh;
+    private Vector2[] _uvs;
     public bool Dirty { get; set; } = true;
     public byte[] Voxels { get; private set; } = Array.Empty<byte>();
 
@@ -20,7 +18,10 @@ public partial class VoxelChunk : MeshInstance3D
     {
         _collider = GetParent<CollisionShape3D>();
         _chunkPos = (Vector3I)(GlobalPosition / (VoxelConstants.VoxelScalar / 2f)).Floor();
-
+        _arrays = new Godot.Collections.Array();
+        _arrays.Resize((int)Mesh.ArrayType.Max);
+        _myMesh = new ArrayMesh();
+        Mesh = _myMesh;
         LoadChunk();
     }
 
@@ -50,8 +51,11 @@ public partial class VoxelChunk : MeshInstance3D
         Voxels = ChunkLoader.LoadGoxFile(FileAccess.Open(
             $"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox",
             FileAccess.ModeFlags.Read));
-        Mesh = _myMesh = VoxelBuilder.BuildMesh(Voxels);
-        VoxelBuilder.UpdateMeshTexture(_myMesh, Voxels);
+        VoxelBuilder.BuildMesh(_arrays, Voxels);
+        _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
+        VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
+        _myMesh.ClearSurfaces();
+        _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
         if (Engine.IsEditorHint()) return;
 
         _collider.Shape = VoxelBuilder.BuildShape(Voxels);
@@ -62,8 +66,12 @@ public partial class VoxelChunk : MeshInstance3D
     public void SetVoxel(Vector3 pos, byte newByte)
     {
         Voxels[VoxelConstants.Index((int)pos.X, (int)pos.Y, (int)pos.Z)] = newByte;
-        Mesh = _myMesh = VoxelBuilder.BuildMesh(Voxels);
-        VoxelBuilder.UpdateMeshTexture(_myMesh, Voxels);
+        VoxelBuilder.BuildMesh(_arrays, Voxels);
+
+        _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
+        VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
+        _myMesh.ClearSurfaces();
+        _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
         _collider.Shape = VoxelBuilder.BuildShape(Voxels);
     }
 
@@ -71,7 +79,9 @@ public partial class VoxelChunk : MeshInstance3D
     {
         if (!Dirty) return false;
 
-        VoxelBuilder.UpdateMeshTexture(_myMesh, Voxels);
+        VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
+        _myMesh.ClearSurfaces();
+        _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
         Dirty = false;
         return true;
     }

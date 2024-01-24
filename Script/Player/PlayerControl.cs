@@ -1,12 +1,8 @@
-using System;
-using Godot;
-using StarLoop.Script.Extensions;
-
 namespace StarLoop.Script.Player;
 
 public partial class PlayerControl : RigidBody3D
 {
-    private static bool _wireWorldRunning;
+    private static bool _wireWorldRunning = true;
 
     private Camera3D _mainCamera;
     private RayCasting _rayCaster;

@@ -70,7 +70,7 @@ public enum Cell : byte
     WhiteHeadDecay3,
     WhiteTailDecay3,
 
-    RustyPanel,
+    PlainGlass,
     WireDecay4,
     RedHeadDecay4,
     RedTailDecay4,

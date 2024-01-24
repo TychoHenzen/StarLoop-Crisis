@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Godot;
 using StarLoop.Script.Voxels;
 
 namespace StarLoop.Script;
@@ -12,6 +10,7 @@ public partial class VoxelChunkLoader : Node
 
     public override void _Process(double delta)
     {
+        if (!Engine.IsEditorHint()) return;
         if (ShouldClear)
         {
             if (!ShouldRun) return;

@@ -41,7 +41,6 @@ _wireWorld = NodePath("Wireworld")
 
 [node name="EditorLoader" type="Node" parent="."]
 script = ExtResource("2_ve5j8")
-ShouldClear = true
 
 [node name="Wireworld" type="Node" parent="."]
 script = ExtResource("3_53284")

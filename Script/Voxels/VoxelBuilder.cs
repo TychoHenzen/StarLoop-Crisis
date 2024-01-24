@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using Godot;
-using Godot.Collections;
-
 namespace StarLoop.Script.Voxels;
 
 public static class VoxelBuilder
@@ -11,25 +6,16 @@ public static class VoxelBuilder
     private static readonly Vector2 Bot = new(0, VoxelConstants.TileSize.Y);
     private static readonly Vector2 BotRight = new(VoxelConstants.TileSize.X, VoxelConstants.TileSize.Y);
 
-    private static Vector2[] _uvs;
-
     private static List<Vector3> _vertices = new();
     private static List<Vector3> _normals = new();
     private static List<int> _indices = new();
 
-    private static int _vertexCount;
 
-    public static ArrayMesh BuildMesh(byte[] voxelData)
+    public static void BuildMesh(Array arrays, byte[] voxelData)
     {
-        var returned = new ArrayMesh();
-
-        var arrays = new Array();
-        arrays.Resize((int)Mesh.ArrayType.Max);
-
-        _vertices = new List<Vector3>();
-        _normals = new List<Vector3>();
-        _indices = new List<int>();
-        _vertexCount = 0;
+        _vertices.Clear();
+        _normals.Clear();
+        _indices.Clear();
         for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
         {
             for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
@@ -45,17 +31,12 @@ public static class VoxelBuilder
         arrays[(int)Mesh.ArrayType.Vertex] = _vertices.ToArray();
         arrays[(int)Mesh.ArrayType.Index] = _indices.ToArray();
         arrays[(int)Mesh.ArrayType.Normal] = _normals.ToArray();
-        returned.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arrays);
-        return returned;
     }
 
 
-    public static void UpdateMeshTexture(ArrayMesh mesh, byte[] voxelData)
+    public static void UpdateMeshTexture(Array arrays, Vector2[] uvs, byte[] voxelData)
     {
-        var arrays = mesh.SurfaceGetArrays(0);
-
-        _vertexCount = 0;
-        _uvs = arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
+        int counter = 0;
         for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
         {
             for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
@@ -63,14 +44,12 @@ public static class VoxelBuilder
                 for (pos.Z = 0; pos.Z < VoxelConstants.ChunkSize; pos.Z++)
                 {
                     if (voxelData[VoxelConstants.Index(pos)] != 0)
-                        TextureCube(pos, voxelData);
+                        TextureCube(pos, uvs, ref counter, voxelData);
                 }
             }
         }
 
-        arrays[(int)Mesh.ArrayType.TexUV] = _uvs;
-        mesh.ClearSurfaces();
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arrays);
+        arrays[(int)Mesh.ArrayType.TexUV] = uvs;
     }
 
     public static Shape3D BuildShape(byte[] voxelData)
@@ -83,7 +62,6 @@ public static class VoxelBuilder
         _vertices = new List<Vector3>();
         _normals = new List<Vector3>();
         _indices = new List<int>();
-        _vertexCount = 0;
         for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
         {
             for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
@@ -101,48 +79,48 @@ public static class VoxelBuilder
     }
 
 
-    private static void TextureCube(Vector3I pos, byte[] voxelData)
+    private static void TextureCube(Vector3I pos, Vector2[] uvs, ref int counter, byte[] voxelData)
     {
         var selfIndex = VoxelConstants.Index(pos);
         var faceColor = GetUvForByte(voxelData[selfIndex]);
 
         var indexer = VoxelConstants.Index(pos, z: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(faceColor);
+            TextureFace(uvs, ref counter, faceColor);
         // Back face
 
         indexer = VoxelConstants.Index(pos, z: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(faceColor);
+            TextureFace(uvs, ref counter, faceColor);
 
 // Left face
         indexer = VoxelConstants.Index(pos, -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(faceColor);
+            TextureFace(uvs, ref counter, faceColor);
 
 // Right face
         indexer = VoxelConstants.Index(pos, +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(faceColor);
+            TextureFace(uvs, ref counter, faceColor);
 
 // Top face
         indexer = VoxelConstants.Index(pos, y: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(faceColor);
+            TextureFace(uvs, ref counter, faceColor);
 
 // Bottom face
         indexer = VoxelConstants.Index(pos, y: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(faceColor);
+            TextureFace(uvs, ref counter, faceColor);
     }
 
 // Helper function to add a face
-    private static void TextureFace(Vector2 uv)
+    private static void TextureFace(Vector2[] uvs, ref int index, Vector2 uv)
     {
-        _uvs[_vertexCount++] = uv + Right; // Bottom-right
-        _uvs[_vertexCount++] = uv; // Bottom-left
-        _uvs[_vertexCount++] = uv + BotRight; // Top-right
-        _uvs[_vertexCount++] = uv + Bot; // Top-left
+        uvs[index++] = uv + Right; // Bottom-right
+        uvs[index++] = uv; // Bottom-left
+        uvs[index++] = uv + BotRight; // Top-right
+        uvs[index++] = uv + Bot; // Top-left
     }
 
     private static void MeshCube(Vector3I pos, IReadOnlyList<byte> voxelData)
@@ -217,11 +195,9 @@ public static class VoxelBuilder
 
     private static void RenderFace(IReadOnlyList<Vector3> faceVertices)
     {
+        _indices.AddRange(new[] { 2, 1, 0, 2, 3, 1 }.Select(index => index + _vertices.Count));
         _vertices.AddRange(faceVertices.Select(vector3 => vector3
                                                           / VoxelConstants.VoxelScalar));
-        var i = _vertexCount;
-        _indices.AddRange(new[] { 2, 1, 0, 2, 3, 1 }.Select(index => index + i));
-        _vertexCount += faceVertices.Count;
 
         // Calculate normals using the cross product
         var edge1 = faceVertices[1] - faceVertices[0];
@@ -233,8 +209,7 @@ public static class VoxelBuilder
 
     private static bool ShouldRender(IReadOnlyList<byte> voxelData, int indexer, int selfIndex)
     {
-        return indexer < 0 || voxelData[indexer] == (int)Cell.Air ||
-               (voxelData[indexer] == (int)Cell.Glass && voxelData[selfIndex] != (int)Cell.Glass);
+        return indexer < 0 || selfIndex < 0 || voxelData[indexer] == (int)Cell.Air;
     }
 
     public static Vector2 GetUvForByte(byte value)
