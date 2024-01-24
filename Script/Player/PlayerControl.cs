@@ -6,7 +6,7 @@ namespace StarLoop.Script.Player;
 
 public partial class PlayerControl : RigidBody3D
 {
-    private static bool _wireWorldRunning = true;
+    private static bool _wireWorldRunning;
 
     private Camera3D _mainCamera;
     private RayCasting _rayCaster;

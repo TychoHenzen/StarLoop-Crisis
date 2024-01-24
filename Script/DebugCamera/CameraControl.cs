@@ -5,7 +5,7 @@ namespace StarLoop.Script.DebugCamera;
 public partial class CameraControl : Camera3D
 {
     private float _speed = 5.0f; // Camera movement speed
-    [Export] private CameraView CameraView { get; } = null;
+    [Export] private CameraView CameraView { get; set; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()

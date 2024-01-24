@@ -66,6 +66,8 @@ public static class ChunkLoader
 
             LoadImage(index, img, voxels);
             ++index;
+            if (index >= 8)
+                break;
         }
 
         file.Close();

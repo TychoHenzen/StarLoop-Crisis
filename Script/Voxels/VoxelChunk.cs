@@ -50,7 +50,6 @@ public partial class VoxelChunk : MeshInstance3D
         Voxels = ChunkLoader.LoadGoxFile(FileAccess.Open(
             $"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox",
             FileAccess.ModeFlags.Read));
-        Mesh.Free();
         Mesh = _myMesh = VoxelBuilder.BuildMesh(Voxels);
         VoxelBuilder.UpdateMeshTexture(_myMesh, Voxels);
         if (Engine.IsEditorHint()) return;
@@ -63,7 +62,6 @@ public partial class VoxelChunk : MeshInstance3D
     public void SetVoxel(Vector3 pos, byte newByte)
     {
         Voxels[VoxelConstants.Index((int)pos.X, (int)pos.Y, (int)pos.Z)] = newByte;
-        Mesh.Free();
         Mesh = _myMesh = VoxelBuilder.BuildMesh(Voxels);
         VoxelBuilder.UpdateMeshTexture(_myMesh, Voxels);
         _collider.Shape = VoxelBuilder.BuildShape(Voxels);
@@ -80,7 +78,6 @@ public partial class VoxelChunk : MeshInstance3D
 
     public void ClearChunk()
     {
-        Mesh.Free();
         Mesh = null;
         _myMesh = null;
     }

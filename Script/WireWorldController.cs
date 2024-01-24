@@ -84,7 +84,7 @@ public partial class WireWorldController : Node
             default:
             {
                 entry.NextValue = futures
-                    .FirstOrDefault(future => !future.Odds(Random.Shared.NextDouble()),
+                    .FirstOrDefault(future => future.Odds(Random.Shared.NextDouble()),
                         new WireWorldTransition(null, 0, entry.NextValue)).Result;
                 break;
             }

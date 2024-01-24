@@ -10,7 +10,7 @@ namespace StarLoop.Script.Voxels;
 public static class TransitionRules
 {
     public static readonly ImmutableDictionary<byte, WireWorldTransition[]> Transitions = GenerateTransitions();
-    private static IEnumerable<Rule> Always => Array.Empty<Rule>();
+    private static Rule[] Always => Array.Empty<Rule>();
 
     private static Func<double, bool>[] Odds => new Func<double, bool>[]
     {

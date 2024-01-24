@@ -1,28 +1,26 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace StarLoop.Script.Voxels;
 
 public readonly struct WireWorldTransition : IEquatable<WireWorldTransition>
 {
-    public readonly ImmutableArray<Rule> Neighbors;
+    public readonly Rule[] Neighbors;
     public readonly byte Self;
     public readonly byte Result;
     public readonly Func<double, bool> Odds;
 
-    public WireWorldTransition(IEnumerable<Rule> neighbors, byte self, byte result, Func<double, bool> odds = null)
+    public WireWorldTransition(Rule[] neighbors, byte self, byte result, Func<double, bool> odds = null)
     {
-        Neighbors = neighbors.ToImmutableArray();
+        Neighbors = neighbors;
         Self = self;
         Result = result;
         Odds = odds ?? (_ => true);
     }
 
-    public WireWorldTransition(IEnumerable<Rule> neighbors, Cell self, Cell result, Func<double, bool> odds = null)
+    public WireWorldTransition(Rule[] neighbors, Cell self, Cell result, Func<double, bool> odds = null)
     {
-        Neighbors = neighbors.ToImmutableArray();
+        Neighbors = neighbors;
         Odds = odds ?? (_ => true);
         Self = (byte)self;
         Result = (byte)result;

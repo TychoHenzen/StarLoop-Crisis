@@ -1,10 +1,9 @@
-[gd_scene load_steps=63 format=3 uid="uid://c5yunbjca2udw"]
+[gd_scene load_steps=25 format=3 uid="uid://c5yunbjca2udw"]
 
 [ext_resource type="Texture2D" uid="uid://b47m70qsvaev8" path="res://Graphics/Inventory_SelectCell.png" id="1_c14x3"]
 [ext_resource type="Script" path="res://Script/Player/PlayerControl.cs" id="5_amtv7"]
 [ext_resource type="Script" path="res://Script/Player/CameraViewer.cs" id="6_0jfwu"]
 [ext_resource type="Texture2D" uid="uid://brko1xvak7g3v" path="res://Graphics/Location_dot_black.svg.png" id="7_kpkig"]
-[ext_resource type="Script" path="res://Script/Player/Raycasting.cs" id="7_o2fjw"]
 [ext_resource type="Script" path="res://Script/Player/PlayerWalk.cs" id="7_q6xq2"]
 [ext_resource type="Texture2D" uid="uid://68csr6vxt2mt" path="res://Graphics/Toolbar/Slot1.tres" id="9_76yei"]
 [ext_resource type="Script" path="res://Script/Toolbar/ToolbarItem.cs" id="9_mcoy2"]
@@ -17,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://rqvrfa6vr7a3" path="res://Graphics/Toolbar/Slot6.tres" id="15_nkrkw"]
 [ext_resource type="Texture2D" uid="uid://bmr3ls8c2dxmh" path="res://Graphics/Toolbar/Slot7.tres" id="16_desmm"]
 [ext_resource type="Texture2D" uid="uid://d2545mf4j1n5r" path="res://Graphics/Toolbar/Slot8.tres" id="17_hq2ka"]
+[ext_resource type="Script" path="res://Script/Player/RayCasting.cs" id="18_cur8i"]
 [ext_resource type="Texture2D" uid="uid://bh8wuxakveueq" path="res://Graphics/Toolbar/Slot9.tres" id="18_uxh0d"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3thp0"]
@@ -29,82 +29,6 @@ font = SubResource("SystemFont_f3vat")
 font_size = 36
 font_color = Color(0, 0, 0, 1)
 outline_size = 2
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_jnyly"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_u2myn"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_rmjmo"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_2nhgm"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_1d8fg"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_507kl"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_d0aje"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_hqc86"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_646ww"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_q8nxr"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_5bhvk"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_r12ii"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_2suid"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_6lnoy"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_p771n"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_pl20l"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_f1kt4"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_vn1vj"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_qgbdm"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_wxqnt"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_xxhss"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_d1mc1"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_ybp68"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_vn1mv"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_d3sg1"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_1m8fw"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_xifn4"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_5skxi"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_iukr7"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_ju66h"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_ojxmo"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_g0v6k"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_td1tf"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_f0e4t"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_7l4hk"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_5dv10"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_s7y5w"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_qbksa"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_s4c6v"]
 friction = 0.0
@@ -361,120 +285,157 @@ vertical_alignment = 1
 [node name="World" parent="." instance=ExtResource("14_1dw72")]
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,0,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_jnyly")
+mesh = null
+_chunkPos = Vector3i(-1, 0, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,1,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_u2myn")
+mesh = null
+_chunkPos = Vector3i(-1, 1, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,0,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_rmjmo")
+mesh = null
+_chunkPos = Vector3i(-1, 0, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,1,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_2nhgm")
+mesh = null
+_chunkPos = Vector3i(-1, 1, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,0,-1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_1d8fg")
+mesh = null
+_chunkPos = Vector3i(0, 0, -1)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,0,-2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_507kl")
+mesh = null
+_chunkPos = Vector3i(0, 0, -2)
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,0,-2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_d0aje")
+mesh = null
+_chunkPos = Vector3i(-1, 0, -2)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,0,-2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_hqc86")
+mesh = null
+_chunkPos = Vector3i(1, 0, -2)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,0,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_646ww")
+mesh = null
+_chunkPos = Vector3i(1, 0, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,1,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_q8nxr")
+mesh = null
+_chunkPos = Vector3i(1, 1, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,0,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_5bhvk")
+mesh = null
+_chunkPos = Vector3i(1, 0, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,1,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_r12ii")
+mesh = null
+_chunkPos = Vector3i(1, 1, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,0,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_2suid")
+mesh = null
+_chunkPos = Vector3i(0, 0, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,-1,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_6lnoy")
+mesh = null
+_chunkPos = Vector3i(0, -1, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,-1,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_p771n")
+mesh = null
+_chunkPos = Vector3i(0, -1, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,1,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_pl20l")
+mesh = null
+_chunkPos = Vector3i(0, 1, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,0,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_f1kt4")
+mesh = null
 
 [node name="MeshInstance3D" parent="World/Chunk(0,1,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_vn1vj")
+mesh = null
+_chunkPos = Vector3i(0, 1, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,0,4)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_qgbdm")
+mesh = null
+_chunkPos = Vector3i(0, 0, 4)
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,0,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_wxqnt")
+mesh = null
+_chunkPos = Vector3i(-1, 0, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,1,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_xxhss")
+mesh = null
+_chunkPos = Vector3i(-1, 1, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(-1,0,4)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_d1mc1")
+mesh = null
+_chunkPos = Vector3i(-1, 0, 4)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,0,4)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_ybp68")
+mesh = null
+_chunkPos = Vector3i(1, 0, 4)
 
 [node name="MeshInstance3D" parent="World/Chunk(2,0,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_vn1mv")
+mesh = null
+_chunkPos = Vector3i(2, 0, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(2,0,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_d3sg1")
+mesh = null
+_chunkPos = Vector3i(2, 0, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(2,0,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_1m8fw")
+mesh = null
+_chunkPos = Vector3i(2, 0, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(3,0,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_xifn4")
+mesh = null
+_chunkPos = Vector3i(3, 0, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(3,0,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_5skxi")
+mesh = null
+_chunkPos = Vector3i(3, 0, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(3,0,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_iukr7")
+mesh = null
+_chunkPos = Vector3i(3, 0, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(4,0,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_ju66h")
+mesh = null
+_chunkPos = Vector3i(4, 0, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(5,0,1)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_ojxmo")
+mesh = null
+_chunkPos = Vector3i(5, 0, 1)
 
 [node name="MeshInstance3D" parent="World/Chunk(4,0,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_g0v6k")
+mesh = null
+_chunkPos = Vector3i(4, 0, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(4,0,0)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_td1tf")
+mesh = null
+_chunkPos = Vector3i(4, 0, 0)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,0,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_f0e4t")
+mesh = null
+_chunkPos = Vector3i(1, 0, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(1,1,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_7l4hk")
+mesh = null
+_chunkPos = Vector3i(1, 1, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,0,3)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_5dv10")
+mesh = null
+_chunkPos = Vector3i(0, 0, 3)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,0,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_s7y5w")
+mesh = null
+_chunkPos = Vector3i(0, 0, 2)
 
 [node name="MeshInstance3D" parent="World/Chunk(0,1,2)/CollisionShape3D" index="0"]
-mesh = SubResource("ArrayMesh_qbksa")
+mesh = null
+_chunkPos = Vector3i(0, 1, 2)
 
-[node name="Player" type="RigidBody3D" parent="." node_paths=PackedStringArray("_toolbar")]
+[node name="Player" type="RigidBody3D" parent="." node_paths=PackedStringArray("_toolbar", "_voxels", "_wireWorld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.14002, 1.94617, 6.28155)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
@@ -484,6 +445,8 @@ continuous_cd = true
 angular_damp = 10.0
 script = ExtResource("5_amtv7")
 _toolbar = NodePath("../GUI/HBoxContainer")
+_voxels = NodePath("../World")
+_wireWorld = NodePath("../World/Wireworld")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape3D_ywd3e")
@@ -497,19 +460,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0294137, 0)
 
 [node name="View" type="Node" parent="Player"]
 script = ExtResource("6_0jfwu")
-SensitivityX = 0.5
-SensitivityY = 0.1
+_sensitivityX = 0.1
 
 [node name="Movement" type="Node" parent="Player"]
 script = ExtResource("7_q6xq2")
-JumpForce = 4.0
-MoveSpeed = 5.0
-SprintSpeed = 10.0
 
-[node name="Raycasting" type="Node" parent="Player" node_paths=PackedStringArray("Highlight", "Targeted")]
-script = ExtResource("7_o2fjw")
-Highlight = NodePath("ViewedVoxel")
-Targeted = NodePath("PlacedVoxel")
+[node name="Raycasting" type="Node" parent="Player" node_paths=PackedStringArray("_highlight", "_targeted")]
+script = ExtResource("18_cur8i")
+_highlight = NodePath("ViewedVoxel")
+_targeted = NodePath("PlacedVoxel")
 
 [node name="ViewedVoxel" type="CSGBox3D" parent="Player/Raycasting"]
 transparency = 0.75

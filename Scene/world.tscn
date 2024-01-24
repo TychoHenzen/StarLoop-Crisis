@@ -35,8 +35,9 @@ noise = SubResource("FastNoiseLite_wspf5")
 albedo_texture = SubResource("NoiseTexture2D_r0s04")
 uv1_triplanar = true
 
-[node name="World" type="Node"]
+[node name="World" type="Node" node_paths=PackedStringArray("_wireWorld")]
 script = ExtResource("1_54ywr")
+_wireWorld = NodePath("Wireworld")
 
 [node name="EditorLoader" type="Node" parent="."]
 script = ExtResource("2_ve5j8")
@@ -55,7 +56,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 0, 1)
+_chunkPos = Vector3i(-1, 0, 1)
 
 [node name="Chunk(-1,1,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 4)
@@ -67,7 +68,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 1, 1)
+_chunkPos = Vector3i(-1, 1, 1)
 
 [node name="Chunk(-1,0,0)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
@@ -79,7 +80,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 0, 0)
+_chunkPos = Vector3i(-1, 0, 0)
 
 [node name="Chunk(-1,1,0)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 0)
@@ -91,7 +92,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 1, 0)
+_chunkPos = Vector3i(-1, 1, 0)
 
 [node name="Chunk(0,0,-1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
@@ -103,7 +104,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 0, -1)
+_chunkPos = Vector3i(0, 0, -1)
 
 [node name="Chunk(0,0,-2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
@@ -115,7 +116,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 0, -2)
+_chunkPos = Vector3i(0, 0, -2)
 
 [node name="Chunk(-1,0,-2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -8)
@@ -127,7 +128,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 0, -2)
+_chunkPos = Vector3i(-1, 0, -2)
 
 [node name="Chunk(1,0,-2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -8)
@@ -139,7 +140,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 0, -2)
+_chunkPos = Vector3i(1, 0, -2)
 
 [node name="Chunk(1,0,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 4)
@@ -151,7 +152,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 0, 1)
+_chunkPos = Vector3i(1, 0, 1)
 
 [node name="Chunk(1,1,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 4)
@@ -163,7 +164,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 1, 1)
+_chunkPos = Vector3i(1, 1, 1)
 
 [node name="Chunk(1,0,0)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
@@ -175,7 +176,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 0, 0)
+_chunkPos = Vector3i(1, 0, 0)
 
 [node name="Chunk(1,1,0)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 0)
@@ -187,7 +188,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 1, 0)
+_chunkPos = Vector3i(1, 1, 0)
 
 [node name="Chunk(0,0,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
@@ -199,7 +200,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 0, 1)
+_chunkPos = Vector3i(0, 0, 1)
 
 [node name="Chunk(0,-1,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 4)
@@ -211,7 +212,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, -1, 1)
+_chunkPos = Vector3i(0, -1, 1)
 
 [node name="Chunk(0,-1,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 8)
@@ -223,7 +224,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, -1, 2)
+_chunkPos = Vector3i(0, -1, 2)
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="Chunk(0,-1,2)/CollisionShape3D/MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 2, 2, 2)
@@ -262,7 +263,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 1, 1)
+_chunkPos = Vector3i(0, 1, 1)
 
 [node name="Chunk(0,0,0)" type="StaticBody3D" parent="."]
 
@@ -284,7 +285,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 1, 0)
+_chunkPos = Vector3i(0, 1, 0)
 
 [node name="Chunk(0,0,4)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 16)
@@ -296,7 +297,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 0, 4)
+_chunkPos = Vector3i(0, 0, 4)
 
 [node name="Chunk(-1,0,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 8)
@@ -308,7 +309,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 0, 2)
+_chunkPos = Vector3i(-1, 0, 2)
 
 [node name="Chunk(-1,1,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 8)
@@ -320,7 +321,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 1, 2)
+_chunkPos = Vector3i(-1, 1, 2)
 
 [node name="Chunk(-1,0,4)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 16)
@@ -332,7 +333,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(-1, 0, 4)
+_chunkPos = Vector3i(-1, 0, 4)
 
 [node name="Chunk(1,0,4)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 16)
@@ -344,7 +345,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 0, 4)
+_chunkPos = Vector3i(1, 0, 4)
 
 [node name="Chunk(2,0,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 4)
@@ -356,7 +357,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(2, 0, 1)
+_chunkPos = Vector3i(2, 0, 1)
 
 [node name="Chunk(2,0,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
@@ -368,7 +369,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(2, 0, 2)
+_chunkPos = Vector3i(2, 0, 2)
 
 [node name="Chunk(2,0,0)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
@@ -380,7 +381,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(2, 0, 0)
+_chunkPos = Vector3i(2, 0, 0)
 
 [node name="Chunk(3,0,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 4)
@@ -392,7 +393,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(3, 0, 1)
+_chunkPos = Vector3i(3, 0, 1)
 
 [node name="Chunk(3,0,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 8)
@@ -404,7 +405,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(3, 0, 2)
+_chunkPos = Vector3i(3, 0, 2)
 
 [node name="Chunk(3,0,0)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
@@ -416,7 +417,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(3, 0, 0)
+_chunkPos = Vector3i(3, 0, 0)
 
 [node name="Chunk(4,0,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 4)
@@ -428,7 +429,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(4, 0, 1)
+_chunkPos = Vector3i(4, 0, 1)
 
 [node name="Chunk(5,0,1)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 4)
@@ -440,7 +441,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(5, 0, 1)
+_chunkPos = Vector3i(5, 0, 1)
 
 [node name="Chunk(4,0,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 8)
@@ -452,7 +453,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(4, 0, 2)
+_chunkPos = Vector3i(4, 0, 2)
 
 [node name="Chunk(4,0,0)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
@@ -464,7 +465,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(4, 0, 0)
+_chunkPos = Vector3i(4, 0, 0)
 
 [node name="Chunk(1,0,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 8)
@@ -476,7 +477,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 0, 2)
+_chunkPos = Vector3i(1, 0, 2)
 
 [node name="Chunk(1,1,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, 8)
@@ -488,7 +489,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(1, 1, 2)
+_chunkPos = Vector3i(1, 1, 2)
 
 [node name="Chunk(0,0,3)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
@@ -500,7 +501,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 0, 3)
+_chunkPos = Vector3i(0, 0, 3)
 
 [node name="Chunk(0,0,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
@@ -512,7 +513,7 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 0, 2)
+_chunkPos = Vector3i(0, 0, 2)
 
 [node name="Chunk(0,1,2)" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 8)
@@ -524,4 +525,4 @@ shape = SubResource("ConcavePolygonShape3D_frhgl")
 material_override = SubResource("StandardMaterial3D_8co4a")
 skeleton = NodePath("")
 script = ExtResource("5_d7jey")
-_chunkPos = Vector3(0, 1, 2)
+_chunkPos = Vector3i(0, 1, 2)

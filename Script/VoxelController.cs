@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using StarLoop.Script.Voxels;
 
@@ -55,10 +54,12 @@ public partial class VoxelController : Node
 
     public void RedrawDirty(WireWorldController wireWorldController)
     {
-        foreach (var chunk in _registry
-                     .Where(chunk => chunk.Value.Redraw()))
+        foreach (var chunk in _registry)
         {
-            wireWorldController.Register(chunk.Key, chunk.Value);
+            if (chunk.Value.Redraw())
+            {
+                // wireWorldController.Register(chunk.Key, chunk.Value);
+            }
         }
     }
 }
