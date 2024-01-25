@@ -1,6 +1,8 @@
-[gd_scene load_steps=25 format=3 uid="uid://c5yunbjca2udw"]
+[gd_scene load_steps=33 format=3 uid="uid://c5yunbjca2udw"]
 
 [ext_resource type="Texture2D" uid="uid://b47m70qsvaev8" path="res://Graphics/Inventory_SelectCell.png" id="1_c14x3"]
+[ext_resource type="Script" path="res://Script/FollowPlayerCamera.cs" id="1_mokrk"]
+[ext_resource type="PackedScene" uid="uid://dr53vuvk5eun4" path="res://Graphics/polygonscificity_syntystudios_Source_Files/Source_Files/FBX/SM_Veh_Classic_01_Hover.fbx" id="2_wptck"]
 [ext_resource type="Script" path="res://Script/Player/PlayerControl.cs" id="5_amtv7"]
 [ext_resource type="Script" path="res://Script/Player/CameraViewer.cs" id="6_0jfwu"]
 [ext_resource type="Texture2D" uid="uid://brko1xvak7g3v" path="res://Graphics/Location_dot_black.svg.png" id="7_kpkig"]
@@ -15,9 +17,30 @@
 [ext_resource type="Texture2D" uid="uid://cc7agcay6ouh7" path="res://Graphics/Toolbar/Slot5.tres" id="14_r32x3"]
 [ext_resource type="Texture2D" uid="uid://rqvrfa6vr7a3" path="res://Graphics/Toolbar/Slot6.tres" id="15_nkrkw"]
 [ext_resource type="Texture2D" uid="uid://bmr3ls8c2dxmh" path="res://Graphics/Toolbar/Slot7.tres" id="16_desmm"]
+[ext_resource type="Material" uid="uid://b1osrkw7hdtvs" path="res://Graphics/SkyboxMat.tres" id="16_fceox"]
 [ext_resource type="Texture2D" uid="uid://d2545mf4j1n5r" path="res://Graphics/Toolbar/Slot8.tres" id="17_hq2ka"]
 [ext_resource type="Script" path="res://Script/Player/RayCasting.cs" id="18_cur8i"]
 [ext_resource type="Texture2D" uid="uid://bh8wuxakveueq" path="res://Graphics/Toolbar/Slot9.tres" id="18_uxh0d"]
+
+[sub_resource type="Gradient" id="Gradient_413pn"]
+offsets = PackedFloat32Array(0.655941, 0.871287)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_o1cil"]
+frequency = 0.0764
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gcxjt"]
+width = 4096
+height = 4096
+color_ramp = SubResource("Gradient_413pn")
+noise = SubResource("FastNoiseLite_o1cil")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8popw"]
+albedo_texture = SubResource("NoiseTexture2D_gcxjt")
+
+[sub_resource type="Environment" id="Environment_r5ylt"]
+background_mode = 4
+background_energy_multiplier = 0.0
+ambient_light_energy = 0.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3thp0"]
 
@@ -38,8 +61,39 @@ margin = 0.1
 height = 1.8
 
 [sub_resource type="Environment" id="Environment_h22r2"]
+background_mode = 1
+background_energy_multiplier = 0.0
+ambient_light_energy = 0.0
 
 [node name="Node3D" type="Node3D"]
+
+[node name="Skybox" type="SubViewport" parent="."]
+handle_input_locally = false
+size = Vector2i(4096, 4096)
+render_target_update_mode = 4
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Skybox"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 100, 0)
+flip_faces = true
+radius = 5.0
+material = SubResource("StandardMaterial3D_8popw")
+
+[node name="SkyboxCamera" type="Camera3D" parent="Skybox/CSGSphere3D" node_paths=PackedStringArray("MainCamera")]
+environment = SubResource("Environment_r5ylt")
+near = 0.001
+script = ExtResource("1_mokrk")
+MainCamera = NodePath("../../../Player/CollisionShape3D/Camera3D")
+
+[node name="Root Scene" parent="Skybox/CSGSphere3D" instance=ExtResource("2_wptck")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.2623, -1.71203, 0)
+
+[node name="SM_Veh_Classic_01_Hover" parent="Skybox/CSGSphere3D/Root Scene/RootNode" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Skybox/CSGSphere3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.363834, 1.26993, 0)
+light_energy = 4.0
+omni_range = 45.1929
 
 [node name="GUI" type="Node" parent="."]
 
@@ -284,7 +338,32 @@ vertical_alignment = 1
 
 [node name="World" parent="." instance=ExtResource("14_1dw72")]
 
-[node name="EditorLoader" parent="World" index="0"]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 2, 6)
+radius = 2.228
+height = 4.0
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="World/CSGCylinder3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00545502, 0, 0)
+operation = 2
+radius = 2.228
+height = 4.0
+material = ExtResource("16_fceox")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 6, 6)
+flip_faces = true
+size = Vector3(11.95, 4, 11.95)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/CSGBox3D"]
+operation = 2
+size = Vector3(11.9, 4.1, 11.9)
+material = ExtResource("16_fceox")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="World/CSGBox3D/CSGBox3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.98204, 0, 0)
+
+[node name="EditorLoader" parent="World" index="2"]
 ShouldClear = true
 
 [node name="Player" type="RigidBody3D" parent="." node_paths=PackedStringArray("_toolbar", "_voxels", "_wireWorld")]
@@ -330,4 +409,5 @@ size = Vector3(0.15, 0.15, 0.15)
 transparency = 0.75
 size = Vector3(0.05, 0.05, 0.05)
 
+[editable path="Skybox/CSGSphere3D/Root Scene"]
 [editable path="World"]

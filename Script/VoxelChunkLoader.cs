@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Godot;
 using StarLoop.Script.Voxels;
 
 namespace StarLoop.Script;

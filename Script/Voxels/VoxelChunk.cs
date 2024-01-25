@@ -1,9 +1,13 @@
+using System;
+using Godot;
+using Array = Godot.Collections.Array;
+
 namespace StarLoop.Script.Voxels;
 
 [Tool]
 public partial class VoxelChunk : MeshInstance3D
 {
-    private Godot.Collections.Array _arrays;
+    private Array _arrays;
     [Export] private Vector3I _chunkPos;
 
     private CollisionShape3D _collider;
@@ -11,14 +15,14 @@ public partial class VoxelChunk : MeshInstance3D
     private ArrayMesh _myMesh;
     private Vector2[] _uvs;
     public bool Dirty { get; set; } = true;
-    public byte[] Voxels { get; private set; } = Array.Empty<byte>();
+    public byte[] Voxels { get; private set; } = System.Array.Empty<byte>();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         _collider = GetParent<CollisionShape3D>();
         _chunkPos = (Vector3I)(GlobalPosition / (VoxelConstants.VoxelScalar / 2f)).Floor();
-        _arrays = new Godot.Collections.Array();
+        _arrays = new Array();
         _arrays.Resize((int)Mesh.ArrayType.Max);
         _myMesh = new ArrayMesh();
         Mesh = _myMesh;
@@ -63,7 +67,7 @@ public partial class VoxelChunk : MeshInstance3D
         GetParent().GetParent().GetParent<VoxelController>().Register(_chunkPos, this);
     }
 
-    public void SetVoxel(Vector3 pos, byte newByte)
+    public void SetVoxel(Vector3I pos, byte newByte)
     {
         Voxels[VoxelConstants.Index((int)pos.X, (int)pos.Y, (int)pos.Z)] = newByte;
         VoxelBuilder.BuildMesh(_arrays, Voxels);
