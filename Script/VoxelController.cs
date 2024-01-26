@@ -56,10 +56,7 @@ public partial class VoxelController : Node
     {
         foreach (var chunk in _registry)
         {
-            if (chunk.Value.Redraw())
-            {
-                // wireWorldController.Register(chunk.Key, chunk.Value);
-            }
+            chunk.Value.Redraw(wireWorldController.PlayerCam);
         }
     }
 }

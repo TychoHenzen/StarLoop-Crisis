@@ -24,6 +24,7 @@ public partial class WireWorldController : Node
         new(1, 1, -1), new(1, 1, 0), new(1, 1, 1)
     };
 
+    [Export] public Camera3D PlayerCam { get; private set; }
     private readonly List<WireWorldRef> _wireWorldVoxels = new();
     public static int Step { get; private set; }
 
@@ -51,11 +52,10 @@ public partial class WireWorldController : Node
             for (var index = 0; index < Offsets.Length; index++)
                 neighbors[index] = voxels.GetVoxel(entry.VoxelPos + Offsets[index]);
 
-            List<WireWorldTransition> futures = new();
-            foreach (var rule in TransitionRules.Transitions[entry.CurrentValue])
-                if (Matches(rule.Neighbors, neighbors))
-                    futures.Add(rule);
-
+            var futures = TransitionRules
+                .Transitions[entry.CurrentValue]
+                .Where(rule => Matches(rule.Neighbors, neighbors))
+                .ToList();
 
             ParseTransition(futures, entry);
         });

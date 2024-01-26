@@ -5,36 +5,28 @@ namespace StarLoop.Script.Voxels;
 public class WireWorldRef
 {
     private readonly int _index;
-    private readonly byte _originalValue;
     public readonly VoxelChunk Chunk;
     public readonly Vector3I VoxelPos;
+    public byte CurrentValue { get; private set; }
+    public byte NextValue { get; set; }
 
     public WireWorldRef(Vector3I voxelPos, VoxelChunk chunk, int index)
     {
         VoxelPos = voxelPos;
-        _originalValue = chunk.Voxels[index];
         Chunk = chunk;
         _index = index;
-        CurrentValue = _originalValue;
+        CurrentValue = chunk.Voxels[index];
         NextValue = CurrentValue;
     }
 
-    public byte CurrentValue { get; private set; }
-    public byte NextValue { get; set; }
 
     public void Finish()
     {
         if (CurrentValue == NextValue)
             return;
 
-        Chunk.Dirty = true;
+        Chunk.Dirty.Add((VoxelPos+ Vector3.One / 2) / VoxelConstants.VoxelScalar);
         CurrentValue = NextValue;
         Chunk.Voxels[_index] = CurrentValue;
-    }
-
-    public void PreSave()
-    {
-        Chunk.Dirty = true;
-        Chunk.Voxels[_index] = _originalValue;
     }
 }

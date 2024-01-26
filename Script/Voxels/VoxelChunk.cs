@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using Array = Godot.Collections.Array;
 
@@ -14,7 +15,7 @@ public partial class VoxelChunk : MeshInstance3D
     private string _hash = "";
     private ArrayMesh _myMesh;
     private Vector2[] _uvs;
-    public bool Dirty { get; set; } = true;
+    public List<Vector3> Dirty { get; } = new();
     public byte[] Voxels { get; private set; } = System.Array.Empty<byte>();
 
     // Called when the node enters the scene tree for the first time.
@@ -79,16 +80,20 @@ public partial class VoxelChunk : MeshInstance3D
         _collider.Shape = VoxelBuilder.BuildShape(Voxels);
     }
 
-    public bool Redraw()
+    public bool Redraw(Camera3D playerCamera)
     {
-        if (!Dirty) return false;
+        if (Dirty.Count == 0) return false;
 
+        if (!VisibilityTester.AnyVoxelsVisible(Dirty, GetViewport())) return false;
+        
         VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
         _myMesh.ClearSurfaces();
         _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
-        Dirty = false;
+        Dirty.Clear();
         return true;
     }
+
+    
 
     public void ClearChunk()
     {
