@@ -11,7 +11,7 @@ public partial class FollowPlayerCamera : Camera3D
     public override void _Ready()
     {
         _mainCameraStartingPos = MainCamera.GlobalPosition;
-        _myStartingPos = GlobalPosition;
+        _myStartingPos = Position;
     }
 
 
@@ -27,6 +27,6 @@ public partial class FollowPlayerCamera : Camera3D
 
         // Set the adjusted rotation to the GlobalRotation of the skybox camera
         GlobalRotation = globalRotation;
-        GlobalPosition = _myStartingPos - new Vector3(_relativePos.X, -_relativePos.Y, -_relativePos.Z);
+        Position = _myStartingPos - new Vector3(_relativePos.X, -_relativePos.Y, -_relativePos.Z) / 30f;
     }
 }

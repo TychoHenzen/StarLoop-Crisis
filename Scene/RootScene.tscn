@@ -1,9 +1,11 @@
-[gd_scene load_steps=33 format=3 uid="uid://c5yunbjca2udw"]
+[gd_scene load_steps=40 format=3 uid="uid://c5yunbjca2udw"]
 
 [ext_resource type="Texture2D" uid="uid://b47m70qsvaev8" path="res://Graphics/Inventory_SelectCell.png" id="1_c14x3"]
 [ext_resource type="Script" path="res://Script/FollowPlayerCamera.cs" id="1_mokrk"]
+[ext_resource type="Script" path="res://Script/Signals/Effectors/TransformEffector.cs" id="1_u86vg"]
 [ext_resource type="PackedScene" uid="uid://dr53vuvk5eun4" path="res://Graphics/polygonscificity_syntystudios_Source_Files/Source_Files/FBX/SM_Veh_Classic_01_Hover.fbx" id="2_wptck"]
 [ext_resource type="Script" path="res://Script/Player/PlayerControl.cs" id="5_amtv7"]
+[ext_resource type="Script" path="res://Script/TimeLoop/ScreenshotStack.cs" id="5_xsr22"]
 [ext_resource type="Script" path="res://Script/Player/CameraViewer.cs" id="6_0jfwu"]
 [ext_resource type="Texture2D" uid="uid://brko1xvak7g3v" path="res://Graphics/Location_dot_black.svg.png" id="7_kpkig"]
 [ext_resource type="Script" path="res://Script/Player/PlayerWalk.cs" id="7_q6xq2"]
@@ -21,6 +23,26 @@
 [ext_resource type="Texture2D" uid="uid://d2545mf4j1n5r" path="res://Graphics/Toolbar/Slot8.tres" id="17_hq2ka"]
 [ext_resource type="Script" path="res://Script/Player/RayCasting.cs" id="18_cur8i"]
 [ext_resource type="Texture2D" uid="uid://bh8wuxakveueq" path="res://Graphics/Toolbar/Slot9.tres" id="18_uxh0d"]
+[ext_resource type="Script" path="res://Scene/NodeLight.cs" id="20_umric"]
+
+[sub_resource type="Gradient" id="Gradient_36hx7"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_reyj4"]
+noise_type = 3
+fractal_type = 3
+fractal_octaves = 8
+fractal_gain = 0.9
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_katur"]
+width = 4096
+height = 4096
+color_ramp = SubResource("Gradient_36hx7")
+noise = SubResource("FastNoiseLite_reyj4")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v33xn"]
+albedo_color = Color(1, 0.690196, 0, 1)
+albedo_texture = SubResource("NoiseTexture2D_katur")
 
 [sub_resource type="Gradient" id="Gradient_413pn"]
 offsets = PackedFloat32Array(0.655941, 0.871287)
@@ -72,30 +94,51 @@ handle_input_locally = false
 size = Vector2i(4096, 4096)
 render_target_update_mode = 4
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="Skybox"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 100, 0)
+[node name="CSGSphere3D3" type="CSGSphere3D" parent="Skybox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.64546, 140.486, 0)
+operation = 2
 flip_faces = true
-radius = 5.0
+radius = 2.01427
+material = SubResource("StandardMaterial3D_v33xn")
+
+[node name="MovementMarker" type="CSGSphere3D" parent="Skybox/CSGSphere3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36674, 0)
+radius = 0.40831
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Skybox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.79606, 140.425, 0)
+light_energy = 4.0
+omni_range = 45.1929
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Skybox" node_paths=PackedStringArray("_destinationMarker", "_transformToMove")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 143.513, 0)
+flip_faces = true
+radius = 11.3775
 material = SubResource("StandardMaterial3D_8popw")
+script = ExtResource("1_u86vg")
+_destinationMarker = NodePath("../CSGSphere3D3/MovementMarker")
+_transformToMove = NodePath(".")
+
+[node name="Root Scene" parent="Skybox/CSGSphere3D" instance=ExtResource("2_wptck")]
+transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 3.61131, -4.05101, -4.76837e-07)
 
 [node name="SkyboxCamera" type="Camera3D" parent="Skybox/CSGSphere3D" node_paths=PackedStringArray("MainCamera")]
+transform = Transform3D(1, 0, 2.96059e-15, 0, 1, 0, -2.96059e-15, 0, 1, 3.85693, -3.48903, -4.76837e-07)
 environment = SubResource("Environment_r5ylt")
 near = 0.001
 script = ExtResource("1_mokrk")
 MainCamera = NodePath("../../../Player/CollisionShape3D/Camera3D")
 
-[node name="Root Scene" parent="Skybox/CSGSphere3D" instance=ExtResource("2_wptck")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.2623, -1.71203, 0)
+[node name="GUI" type="Node" parent="." node_paths=PackedStringArray("_screenshotOverlay")]
+script = ExtResource("5_xsr22")
+_screenshotOverlay = NodePath("RewindOverlay")
 
-[node name="SM_Veh_Classic_01_Hover" parent="Skybox/CSGSphere3D/Root Scene/RootNode" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="Skybox/CSGSphere3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.363834, 1.26993, 0)
-light_energy = 4.0
-omni_range = 45.1929
-
-[node name="GUI" type="Node" parent="."]
+[node name="RewindOverlay" type="TextureRect" parent="GUI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="GUI"]
 anchors_preset = 8
@@ -338,6 +381,9 @@ vertical_alignment = 1
 
 [node name="World" parent="." instance=ExtResource("14_1dw72")]
 
+[node name="EditorLoader" parent="World" index="0"]
+ShouldClear = true
+
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 2, 6)
 radius = 2.228
@@ -363,8 +409,12 @@ material = ExtResource("16_fceox")
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/CSGBox3D/CSGBox3D2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.98204, 0, 0)
 
-[node name="EditorLoader" parent="World" index="2"]
-ShouldClear = true
+[node name="OmniLight3D" type="OmniLight3D" parent="World" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.70847, 9.75281)
+light_bake_mode = 0
+shadow_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("..")
 
 [node name="Player" type="RigidBody3D" parent="." node_paths=PackedStringArray("_toolbar", "_voxels", "_wireWorld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.14002, 1.94617, 6.28155)
@@ -408,6 +458,8 @@ size = Vector3(0.15, 0.15, 0.15)
 [node name="PlacedVoxel" type="CSGBox3D" parent="Player/Raycasting"]
 transparency = 0.75
 size = Vector3(0.05, 0.05, 0.05)
+
+[connection signal="TweenTick" from="GUI" to="Skybox/CSGSphere3D" method="Tick"]
 
 [editable path="Skybox/CSGSphere3D/Root Scene"]
 [editable path="World"]

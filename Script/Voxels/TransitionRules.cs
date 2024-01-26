@@ -288,30 +288,32 @@ public static class TransitionRules
 
     private static IEnumerable<WireWorldTransition> LampDown()
     {
-        Func<double, bool> func = v => WireWorldController.Step % 10 == 0 && v < 0.5;
-        yield return new WireWorldTransition(Always, Lamp1, Lamp2, func);
-        yield return new WireWorldTransition(Always, Lamp1, Lamp2, func);
-        yield return new WireWorldTransition(Always, Lamp1, Lamp2, func);
-        yield return new WireWorldTransition(Always, Lamp1, Lamp2, func);
-        yield return new WireWorldTransition(Always, Lamp1, Lamp2, func);
-        yield return new WireWorldTransition(Always, Lamp1, Lamp2, func);
-        yield return new WireWorldTransition(Always, Lamp1, Lamp2, func);
+        Func<double, bool> func1 = v => WireWorldController.Step % 20 == 0 && v < 0.5;
+        Func<double, bool> func2 = v => WireWorldController.Step % 40 == 0 && v < 0.5;
+        Func<double, bool> func3 = v => WireWorldController.Step % 60 == 0 && v < 0.5;
+        yield return new WireWorldTransition(Always, Lamp2, Lamp1, func1);
+        yield return new WireWorldTransition(Always, Lamp2, Lamp1, func1);
+        yield return new WireWorldTransition(Always, Lamp2, Lamp1, func1);
+        yield return new WireWorldTransition(Always, Lamp2, Lamp1, func1);
+        yield return new WireWorldTransition(Always, Lamp2, Lamp1, func1);
+        yield return new WireWorldTransition(Always, Lamp2, Lamp1, func1);
+        yield return new WireWorldTransition(Always, Lamp2, Lamp1, func1);
 
-        yield return new WireWorldTransition(Always, Lamp2, Lamp3, func);
-        yield return new WireWorldTransition(Always, Lamp2, Lamp3, func);
-        yield return new WireWorldTransition(Always, Lamp2, Lamp3, func);
-        yield return new WireWorldTransition(Always, Lamp2, Lamp3, func);
-        yield return new WireWorldTransition(Always, Lamp2, Lamp3, func);
-        yield return new WireWorldTransition(Always, Lamp2, Lamp3, func);
-        yield return new WireWorldTransition(Always, Lamp2, Lamp3, func);
+        yield return new WireWorldTransition(Always, Lamp3, Lamp2, func2);
+        yield return new WireWorldTransition(Always, Lamp3, Lamp2, func2);
+        yield return new WireWorldTransition(Always, Lamp3, Lamp2, func2);
+        yield return new WireWorldTransition(Always, Lamp3, Lamp2, func2);
+        yield return new WireWorldTransition(Always, Lamp3, Lamp2, func2);
+        yield return new WireWorldTransition(Always, Lamp3, Lamp2, func2);
+        yield return new WireWorldTransition(Always, Lamp3, Lamp2, func2);
 
-        yield return new WireWorldTransition(Always, Lamp3, Lamp4, func);
-        yield return new WireWorldTransition(Always, Lamp3, Lamp4, func);
-        yield return new WireWorldTransition(Always, Lamp3, Lamp4, func);
-        yield return new WireWorldTransition(Always, Lamp3, Lamp4, func);
-        yield return new WireWorldTransition(Always, Lamp3, Lamp4, func);
-        yield return new WireWorldTransition(Always, Lamp3, Lamp4, func);
-        yield return new WireWorldTransition(Always, Lamp3, Lamp4, func);
+        yield return new WireWorldTransition(Always, Lamp4, Lamp3, func3);
+        yield return new WireWorldTransition(Always, Lamp4, Lamp3, func3);
+        yield return new WireWorldTransition(Always, Lamp4, Lamp3, func3);
+        yield return new WireWorldTransition(Always, Lamp4, Lamp3, func3);
+        yield return new WireWorldTransition(Always, Lamp4, Lamp3, func3);
+        yield return new WireWorldTransition(Always, Lamp4, Lamp3, func3);
+        yield return new WireWorldTransition(Always, Lamp4, Lamp3, func3);
     }
 
     private static IEnumerable<WireWorldTransition> LampUp(int headIndex)

@@ -6,7 +6,13 @@ namespace StarLoop.Script.TimeLoop;
 
 public partial class ScreenshotStack : Node
 {
-    private const int TotalDuration = 300; // 300 seconds for 5 minutes
+    [Signal]
+    public delegate void ResetGameEventHandler(double value);
+
+    [Signal]
+    public delegate void TweenTickEventHandler(double value);
+
+    private const int TotalDuration = 150; // 300 seconds for 5 minutes
     private const float StartSpeed = 0.5f; // How much to decrease the duration each time
     private const float SpeedIncreaseFactor = 0.01f; // How much to decrease the duration each time
     private readonly Stack<ImageTexture> _screenshots = new();
@@ -14,9 +20,9 @@ public partial class ScreenshotStack : Node
     private Timer _playbackTimer;
     private int _screenshotCount;
 
-    private Timer _screenshotTimer;
+    [Export] private TextureRect _screenshotOverlay;
 
-    [Export] private TextureRect ScreenshotOverlay;
+    private Timer _screenshotTimer;
 
     public override void _Ready()
     {
@@ -29,6 +35,8 @@ public partial class ScreenshotStack : Node
 
     private void OnTimerTimeout()
     {
+        var fraction = _screenshotCount / (double)TotalDuration;
+        EmitSignal(SignalName.TweenTick, fraction);
         if (_screenshotCount < TotalDuration)
         {
             SaveScreenshot();
@@ -44,8 +52,6 @@ public partial class ScreenshotStack : Node
     public ImageTexture CaptureScreenshot()
     {
         var image = GetViewport().GetTexture().GetImage();
-        image.FlipY(); // Since the image might be upside down
-
         var texture = new ImageTexture();
         texture.SetImage(image);
 
@@ -65,14 +71,15 @@ public partial class ScreenshotStack : Node
         AddChild(_playbackTimer);
         _playbackTimer.Connect(Timer.SignalName.Timeout, Callable.From(OnPlaybackTimerTimeout));
         _playbackTimer.Start(_playbackSpeed);
+        DisplayScreenshot(_screenshots.Peek());
+        EmitSignal(SignalName.ResetGame);
     }
 
     private void OnPlaybackTimerTimeout()
     {
         if (_screenshots.Count > 0)
         {
-            var screenshot = _screenshots.Pop();
-            DisplayScreenshot(screenshot); // Method to display screenshot in TextureRect
+            DisplayScreenshot(_screenshots.Pop()); // Method to display screenshot in TextureRect
 
             // Adjust the playback speed
             _playbackSpeed -= SpeedIncreaseFactor;
@@ -82,7 +89,8 @@ public partial class ScreenshotStack : Node
         else
         {
             _playbackTimer.Stop();
-            ScreenshotOverlay.Texture = null;
+            GetTree().ReloadCurrentScene();
+            _screenshotOverlay.Texture = null;
             // Optionally, trigger an event to indicate playback completion
         }
     }
@@ -90,6 +98,6 @@ public partial class ScreenshotStack : Node
     private void DisplayScreenshot(ImageTexture screenshot)
     {
         // Assuming you have a TextureRect named screenshotOverlay
-        ScreenshotOverlay.Texture = screenshot;
+        _screenshotOverlay.Texture = screenshot;
     }
 }

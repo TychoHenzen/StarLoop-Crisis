@@ -47,12 +47,15 @@ public partial class WireWorldController : Node
         // foreach (var entry in WireWorldVoxels)
         Parallel.ForEach(_wireWorldVoxels, entry =>
         {
-            var neighbors = Offsets
-                .Select(offset => entry.VoxelPos + offset)
-                .Select(voxels.GetVoxel).ToArray();
+            var neighbors = new byte[Offsets.Length];
+            for (var index = 0; index < Offsets.Length; index++)
+                neighbors[index] = voxels.GetVoxel(entry.VoxelPos + Offsets[index]);
 
-            var futures = TransitionRules.Transitions[entry.CurrentValue]
-                .Where(transition => Matches(transition, neighbors)).ToList();
+            List<WireWorldTransition> futures = new();
+            foreach (var rule in TransitionRules.Transitions[entry.CurrentValue])
+                if (Matches(rule.Neighbors, neighbors))
+                    futures.Add(rule);
+
 
             ParseTransition(futures, entry);
         });
@@ -89,11 +92,15 @@ public partial class WireWorldController : Node
         }
     }
 
-    private static bool Matches(WireWorldTransition transition, byte[] neighbors)
+    private static bool Matches(Rule[] transition, byte[] neighbors)
     {
-        foreach (var rule in transition.Neighbors)
+        foreach (var rule in transition)
         {
-            var count = neighbors.Count(b => b == rule.Type);
+            var count = 0;
+            foreach (var b in neighbors)
+                if (b == rule.Type)
+                    count++;
+
             if (count < rule.Min || count > rule.Max)
                 return false;
         }

@@ -69,7 +69,7 @@ public partial class VoxelChunk : MeshInstance3D
 
     public void SetVoxel(Vector3I pos, byte newByte)
     {
-        Voxels[VoxelConstants.Index((int)pos.X, (int)pos.Y, (int)pos.Z)] = newByte;
+        Voxels[VoxelConstants.Index(pos)] = newByte;
         VoxelBuilder.BuildMesh(_arrays, Voxels);
 
         _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
