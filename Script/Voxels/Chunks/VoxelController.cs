@@ -15,14 +15,6 @@ public partial class VoxelController : Node
         _wireWorld.Register(position, chunk);
     }
 
-    public void Save()
-    {
-        foreach (var chunk in _registry)
-        {
-            ChunkLoader.SaveFile(chunk.Key, chunk.Value.Voxels);
-        }
-    }
-
     public static Vector3I GetChunkPos(Vector3 position)
     {
         return (Vector3I)(position / VoxelConstants.ChunkSize).Floor();
@@ -52,11 +44,11 @@ public partial class VoxelController : Node
         return _registry[chunkIdx].Voxels[voxelIdx];
     }
 
-    public void RedrawDirty(WireWorldController wireWorldController)
+    public void RedrawDirty()
     {
         foreach (var chunk in _registry)
         {
-            chunk.Value.Redraw(wireWorldController.PlayerCam);
+            chunk.Value.Redraw();
         }
     }
 }

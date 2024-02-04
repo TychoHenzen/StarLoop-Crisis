@@ -348,9 +348,9 @@ public static class TransitionRules
 
     private static IEnumerable<WireWorldTransition> Spread()
     {
-        Func<double, bool> t1Spread = v => v < 0.001;
-        Func<double, bool> t2Spread = v => v < 0.005;
-        Func<double, bool> t3Spread = v => v < 0.01;
+        Func<double, bool> t1Spread = v => v < 0.005;
+        Func<double, bool> t2Spread = v => v < 0.01;
+        Func<double, bool> t3Spread = v => v < 0.05;
         yield return new WireWorldTransition(new Rule[] { new(WireDecay1, 1, 1) }, Wire, WireDecay1, t1Spread);
         yield return new WireWorldTransition(new Rule[] { new(WireDecay1, 2, 2) }, Wire, WireDecay1, t2Spread);
         yield return new WireWorldTransition(new Rule[] { new(WireDecay1, 3, 3) }, Wire, WireDecay1, t3Spread);
@@ -517,7 +517,7 @@ public static class TransitionRules
 
     private static IEnumerable<WireWorldTransition> Decay()
     {
-        Func<double, bool> t1Spread = v => v < 0.00001;
+        Func<double, bool> t1Spread = v => v < 0.01;
         yield return new WireWorldTransition(new Rule[] { new(RedHeadDecay1, 1, 2) }, WireDecay1, RedHeadDecay2,
             t1Spread);
         yield return new WireWorldTransition(new Rule[] { new(GreenHeadDecay1, 1, 2) }, WireDecay1, GreenHeadDecay2,

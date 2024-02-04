@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=3 uid="uid://d0r24f82bfke5"]
 
-[ext_resource type="Script" path="res://Script/VoxelController.cs" id="1_54ywr"]
-[ext_resource type="Script" path="res://Script/VoxelChunkLoader.cs" id="2_ve5j8"]
-[ext_resource type="Script" path="res://Script/WireWorldController.cs" id="3_53284"]
+[ext_resource type="Script" path="res://Script/Voxels/Chunks/VoxelController.cs" id="1_54ywr"]
+[ext_resource type="Script" path="res://Script/Voxels/Loading/VoxelChunkLoader.cs" id="2_ve5j8"]
+[ext_resource type="Script" path="res://Script/Voxels/Wireworld/WireWorldController.cs" id="3_53284"]
 [ext_resource type="Texture2D" uid="uid://bkvtm8x8y7u82" path="res://Graphics/SpriteSheet.png" id="4_64lbp"]
-[ext_resource type="Script" path="res://Script/Voxels/VoxelChunk.cs" id="5_d7jey"]
-[ext_resource type="Script" path="res://Script/Rotator.cs" id="6_swqsx"]
+[ext_resource type="Script" path="res://Script/Voxels/Chunks/VoxelChunk.cs" id="5_d7jey"]
+[ext_resource type="Script" path="res://Script/Helpers/Rotator.cs" id="6_swqsx"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_frhgl"]
 
@@ -41,6 +41,7 @@ _wireWorld = NodePath("Wireworld")
 
 [node name="EditorLoader" type="Node" parent="."]
 script = ExtResource("2_ve5j8")
+ShouldClear = true
 
 [node name="Wireworld" type="Node" parent="."]
 script = ExtResource("3_53284")

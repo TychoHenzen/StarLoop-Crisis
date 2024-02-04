@@ -31,7 +31,7 @@ public partial class TransformEffector : Node3D
 
     public void Tick(float value)
     {
-        GD.Print($"Ticking: {value}");
+        value *= value;
         _transformToMove.GlobalPosition = _start.Position.Lerp(_end.Position, value);
         _transformToMove.GlobalRotation = _start.Rotation.Lerp(_end.Rotation, value);
         _transformToMove.Scale = _start.Scale.Lerp(_end.Scale, value);

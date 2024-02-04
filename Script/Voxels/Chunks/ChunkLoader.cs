@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using Godot;
 using FileAccess = Godot.FileAccess;
 
@@ -121,29 +119,5 @@ public static class ChunkLoader
                     return;
             }
         }
-    }
-
-
-    public static void SaveFile(Vector3 chunkPos, byte[] voxels)
-    {
-        var file = FileAccess.Open($"Chunk_{chunkPos.X}_{chunkPos.Y}_{chunkPos.Z}.txt",
-            FileAccess.ModeFlags.Write);
-        if (file == null)
-        {
-            GD.PrintErr();
-            throw new FileLoadException(
-                $"Failed to open file: Chunk_{chunkPos.X}_{chunkPos.Y}_{chunkPos.Z}.txt");
-        }
-
-        for (var i = 0; i < voxels.Length; i++)
-        {
-            if (voxels[i] == 0) continue;
-            var pos = VoxelConstants.ReverseIndex(i);
-            file.StoreLine(
-                $"{pos.Z - 16} {pos.X - 16} {pos.Y} {HexConvert.Converter.First(pair => pair.Value == voxels[i]).Key:x6}");
-        }
-
-        GD.Print($"Saving {file.GetPathAbsolute()}");
-        file.Close();
     }
 }

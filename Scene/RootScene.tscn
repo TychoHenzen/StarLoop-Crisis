@@ -1,7 +1,8 @@
-[gd_scene load_steps=40 format=3 uid="uid://c5yunbjca2udw"]
+[gd_scene load_steps=42 format=3 uid="uid://c5yunbjca2udw"]
 
 [ext_resource type="Texture2D" uid="uid://b47m70qsvaev8" path="res://Graphics/Inventory_SelectCell.png" id="1_c14x3"]
-[ext_resource type="Script" path="res://Script/FollowPlayerCamera.cs" id="1_mokrk"]
+[ext_resource type="Script" path="res://Script/Skybox/FollowPlayerCamera.cs" id="1_mokrk"]
+[ext_resource type="Script" path="res://Script/Signals/Mechanisms/AudioTween.cs" id="1_otxv8"]
 [ext_resource type="Script" path="res://Script/Signals/Effectors/TransformEffector.cs" id="1_u86vg"]
 [ext_resource type="PackedScene" uid="uid://dr53vuvk5eun4" path="res://Graphics/polygonscificity_syntystudios_Source_Files/Source_Files/FBX/SM_Veh_Classic_01_Hover.fbx" id="2_wptck"]
 [ext_resource type="Script" path="res://Script/Player/PlayerControl.cs" id="5_amtv7"]
@@ -11,7 +12,7 @@
 [ext_resource type="Script" path="res://Script/Player/PlayerWalk.cs" id="7_q6xq2"]
 [ext_resource type="Texture2D" uid="uid://68csr6vxt2mt" path="res://Graphics/Toolbar/Slot1.tres" id="9_76yei"]
 [ext_resource type="Script" path="res://Script/Toolbar/ToolbarItem.cs" id="9_mcoy2"]
-[ext_resource type="Script" path="res://Script/ToolbarControl.cs" id="9_o1e5n"]
+[ext_resource type="Script" path="res://Script/GUI/ToolbarControl.cs" id="9_o1e5n"]
 [ext_resource type="Texture2D" uid="uid://u86xqcvlv58o" path="res://Graphics/Toolbar/Slot2.tres" id="11_lhtvk"]
 [ext_resource type="Texture2D" uid="uid://ch2dympl23ugm" path="res://Graphics/Toolbar/Slot3.tres" id="12_uruky"]
 [ext_resource type="Texture2D" uid="uid://dllioq8ne7n1s" path="res://Graphics/Toolbar/Slot4.tres" id="13_begxu"]
@@ -23,7 +24,8 @@
 [ext_resource type="Texture2D" uid="uid://d2545mf4j1n5r" path="res://Graphics/Toolbar/Slot8.tres" id="17_hq2ka"]
 [ext_resource type="Script" path="res://Script/Player/RayCasting.cs" id="18_cur8i"]
 [ext_resource type="Texture2D" uid="uid://bh8wuxakveueq" path="res://Graphics/Toolbar/Slot9.tres" id="18_uxh0d"]
-[ext_resource type="Script" path="res://Scene/NodeLight.cs" id="20_umric"]
+[ext_resource type="Script" path="res://Script/Voxels/Outputs/NodeLight.cs" id="20_umric"]
+[ext_resource type="AudioStream" uid="uid://dxbchfqa6j22s" path="res://Sound/Sad_Box_Song.mp3" id="22_qb4xk"]
 
 [sub_resource type="Gradient" id="Gradient_36hx7"]
 colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
@@ -62,6 +64,7 @@ albedo_texture = SubResource("NoiseTexture2D_gcxjt")
 [sub_resource type="Environment" id="Environment_r5ylt"]
 background_mode = 4
 background_energy_multiplier = 0.0
+ambient_light_source = 1
 ambient_light_energy = 0.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3thp0"]
@@ -94,6 +97,10 @@ handle_input_locally = false
 size = Vector2i(4096, 4096)
 render_target_update_mode = 4
 
+[node name="MovementMarker" type="CSGSphere3D" parent="Skybox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.90366, 140.184, -0.172213)
+radius = 0.40831
+
 [node name="CSGSphere3D3" type="CSGSphere3D" parent="Skybox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.64546, 140.486, 0)
 operation = 2
@@ -101,14 +108,13 @@ flip_faces = true
 radius = 2.01427
 material = SubResource("StandardMaterial3D_v33xn")
 
-[node name="MovementMarker" type="CSGSphere3D" parent="Skybox/CSGSphere3D3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36674, 0)
-radius = 0.40831
-
-[node name="OmniLight3D" type="OmniLight3D" parent="Skybox"]
+[node name="OmniLight3D" type="OmniLight3D" parent="Skybox" node_paths=PackedStringArray("audio")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.79606, 140.425, 0)
 light_energy = 4.0
+shadow_enabled = true
 omni_range = 45.1929
+script = ExtResource("1_otxv8")
+audio = NodePath("../../Player/CollisionShape3D/AudioStreamPlayer")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="Skybox" node_paths=PackedStringArray("_destinationMarker", "_transformToMove")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 143.513, 0)
@@ -116,14 +122,22 @@ flip_faces = true
 radius = 11.3775
 material = SubResource("StandardMaterial3D_8popw")
 script = ExtResource("1_u86vg")
-_destinationMarker = NodePath("../CSGSphere3D3/MovementMarker")
-_transformToMove = NodePath(".")
+_destinationMarker = NodePath("../MovementMarker")
+_transformToMove = NodePath("../Root Scene")
 
-[node name="Root Scene" parent="Skybox/CSGSphere3D" instance=ExtResource("2_wptck")]
-transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 3.61131, -4.05101, -4.76837e-07)
+[node name="OmniLight3D2" type="OmniLight3D" parent="Skybox"]
+transform = Transform3D(-1.07284e-07, 0, 1, 0, 1, 0, -1, 0, -1.07284e-07, -0.858059, 144.287, -0.044768)
+light_energy = 4.0
+omni_range = 22.0
 
-[node name="SkyboxCamera" type="Camera3D" parent="Skybox/CSGSphere3D" node_paths=PackedStringArray("MainCamera")]
-transform = Transform3D(1, 0, 2.96059e-15, 0, 1, 0, -2.96059e-15, 0, 1, 3.85693, -3.48903, -4.76837e-07)
+[node name="Root Scene" parent="Skybox" instance=ExtResource("2_wptck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.61131, 139.462, -4.76837e-07)
+
+[node name="RootNode" parent="Skybox/Root Scene" index="0"]
+transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
+
+[node name="SkyboxCamera" type="Camera3D" parent="Skybox/Root Scene" node_paths=PackedStringArray("MainCamera")]
+transform = Transform3D(-4.37113e-08, 0, 1, 0, 1, 0, -1, 0, -4.37113e-08, 0.237805, 0.593735, 0.0273817)
 environment = SubResource("Environment_r5ylt")
 near = 0.001
 script = ExtResource("1_mokrk")
@@ -381,8 +395,247 @@ vertical_alignment = 1
 
 [node name="World" parent="." instance=ExtResource("14_1dw72")]
 
-[node name="EditorLoader" parent="World" index="0"]
-ShouldClear = true
+[node name="MeshInstance3D" parent="World/Chunk(-1,0,1)/CollisionShape3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0294847, 0.015326, -0.00923538)
+_chunkPos = Vector3i(-1, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="1" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.70847, 1.75281)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="2" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.94959, 3.69966, 5.95344)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D6" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="3" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05781, 3.69966, -2.04656)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D26" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="4" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.96035, 3.69966, 1.95344)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D7" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="5" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.91822, 3.64085, -5.92239)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D8" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="6" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.98644, 3.69966, -5.92239)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D13" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="7" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.04841, 3.69966, -6.06602)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D16" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="8" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05799, 3.71208, -1.92937)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D17" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="9" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05799, 3.71208, 1.93745)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D18" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="10" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.94381, 3.71208, 2.01777)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D19" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="11" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0441, 3.71208, 2.01777)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D20" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="12" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9194, 1.88767, 2.03553)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D14" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="13" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.94957, 3.69966, -6.06602)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D15" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="14" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.94957, 3.69966, -2.06602)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D21" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="15" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.9496, 3.69966, -2.06602)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D24" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="16" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9496, 3.63211, -1.94172)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D25" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="17" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.4215, 3.69966, -1.91187)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D22" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="18" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.9496, 3.69966, -6.06602)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D23" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="19" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.911, 2.09257, -5.88312)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D9" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="20" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.95352, 3.69966, -10.0513)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D10" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="21" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.06574, 3.69966, -13.9132)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D11" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="22" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.93426, 3.69966, -13.9354)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D12" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="23" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.93509, 3.69966, -13.9354)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="24" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.94959, 3.69966, 9.95344)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="25" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.94539, 3.69966, 9.95344)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="World/Chunk(0,0,2)" index="26" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05461, 3.69966, 9.95344)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="0" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9182, 3.66399, 1.93773)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="1" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9182, 3.66399, 1.93773)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="2" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9182, 3.66399, -1.96898)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="3" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9182, 3.66399, -5.96898)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D6" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="4" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05994, 3.66399, -5.96898)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D7" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="5" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.92764, 3.66399, -5.96898)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D8" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="6" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.92764, 3.66399, -2.074)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
+
+[node name="OmniLight3D9" type="OmniLight3D" parent="World/Chunk(0,1,2)" index="7" node_paths=PackedStringArray("_ctrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.92764, 3.66399, 1.926)
+light_bake_mode = 0
+distance_fade_enabled = true
+script = ExtResource("20_umric")
+_ctrl = NodePath("../..")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 2, 6)
@@ -409,13 +662,6 @@ material = ExtResource("16_fceox")
 [node name="CSGSphere3D" type="CSGSphere3D" parent="World/CSGBox3D/CSGBox3D2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.98204, 0, 0)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="World" node_paths=PackedStringArray("_ctrl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.70847, 9.75281)
-light_bake_mode = 0
-shadow_enabled = true
-script = ExtResource("20_umric")
-_ctrl = NodePath("..")
-
 [node name="Player" type="RigidBody3D" parent="." node_paths=PackedStringArray("_toolbar", "_voxels", "_wireWorld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.14002, 1.94617, 6.28155)
 axis_lock_angular_x = true
@@ -439,6 +685,10 @@ environment = SubResource("Environment_h22r2")
 [node name="SpotLight3D" type="SpotLight3D" parent="Player/CollisionShape3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0294137, 0)
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/CollisionShape3D"]
+stream = ExtResource("22_qb4xk")
+autoplay = true
+
 [node name="View" type="Node" parent="Player"]
 script = ExtResource("6_0jfwu")
 _sensitivityX = 0.1
@@ -459,7 +709,8 @@ size = Vector3(0.15, 0.15, 0.15)
 transparency = 0.75
 size = Vector3(0.05, 0.05, 0.05)
 
-[connection signal="TweenTick" from="GUI" to="Skybox/CSGSphere3D" method="Tick"]
+[connection signal="TweenTick" from="Skybox/OmniLight3D" to="Skybox/CSGSphere3D" method="Tick"]
+[connection signal="TweenTick" from="Skybox/OmniLight3D" to="GUI" method="OnTimerTimeout"]
 
-[editable path="Skybox/CSGSphere3D/Root Scene"]
+[editable path="Skybox/Root Scene"]
 [editable path="World"]

@@ -13,8 +13,8 @@ public partial class ScreenshotStack : Node
     public delegate void TweenTickEventHandler(double value);
 
     private const int TotalDuration = 150; // 300 seconds for 5 minutes
-    private const float StartSpeed = 0.5f; // How much to decrease the duration each time
-    private const float SpeedIncreaseFactor = 0.01f; // How much to decrease the duration each time
+    private const float StartSpeed = 1f; // How much to decrease the duration each time
+    private const float SpeedIncreaseFactor = 0.05f; // How much to decrease the duration each time
     private readonly Stack<ImageTexture> _screenshots = new();
     private float _playbackSpeed; // Initial duration for each screenshot in seconds
     private Timer _playbackTimer;
@@ -24,27 +24,16 @@ public partial class ScreenshotStack : Node
 
     private Timer _screenshotTimer;
 
-    public override void _Ready()
-    {
-        _screenshotTimer = new Timer();
-        AddChild(_screenshotTimer);
-        _screenshotTimer.WaitTime = 1.0f; // 1 second interval
-        _screenshotTimer.Connect(Timer.SignalName.Timeout, Callable.From(OnTimerTimeout));
-        _screenshotTimer.Start();
-    }
 
-    private void OnTimerTimeout()
+    private void OnTimerTimeout(float tick)
     {
-        var fraction = _screenshotCount / (double)TotalDuration;
-        EmitSignal(SignalName.TweenTick, fraction);
-        if (_screenshotCount < TotalDuration)
+        if (_screenshots.Count < tick * TotalDuration)
         {
             SaveScreenshot();
             _screenshotCount++;
         }
-        else
+        else if (_screenshots.Count == TotalDuration && _playbackTimer == null)
         {
-            _screenshotTimer.Stop();
             PlayScreenshotsInReverse();
         }
     }
@@ -72,7 +61,6 @@ public partial class ScreenshotStack : Node
         _playbackTimer.Connect(Timer.SignalName.Timeout, Callable.From(OnPlaybackTimerTimeout));
         _playbackTimer.Start(_playbackSpeed);
         DisplayScreenshot(_screenshots.Peek());
-        EmitSignal(SignalName.ResetGame);
     }
 
     private void OnPlaybackTimerTimeout()
@@ -83,7 +71,8 @@ public partial class ScreenshotStack : Node
 
             // Adjust the playback speed
             _playbackSpeed -= SpeedIncreaseFactor;
-            _playbackSpeed = Math.Max(_playbackSpeed, 0.1f); // Set a minimum speed to prevent it from becoming too fast
+            _playbackSpeed =
+                Math.Max(_playbackSpeed, 0.05f); // Set a minimum speed to prevent it from becoming too fast
             _playbackTimer.Start(_playbackSpeed);
         }
         else

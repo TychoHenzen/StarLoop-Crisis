@@ -1,0 +1,111 @@
+[gd_scene load_steps=7 format=3 uid="uid://cdwvbiu0bi541"]
+
+[ext_resource type="Script" path="res://Script/GUI/MenuControl.cs" id="1_mlx6x"]
+[ext_resource type="Texture2D" uid="uid://b5lmt4mlt8evy" path="res://Sound/Title screen.png" id="2_6utom"]
+[ext_resource type="Texture2D" uid="uid://emew2rd0ju6c" path="res://Sound/Title screen-Start.png" id="3_erf1k"]
+[ext_resource type="Texture2D" uid="uid://blih8d75fbdmd" path="res://Sound/Title screen-Quit.png" id="4_4jrok"]
+[ext_resource type="Texture2D" uid="uid://bc1ihvth6wxb0" path="res://Sound/Title screen-Settings.png" id="5_gd0x1"]
+[ext_resource type="PackedScene" uid="uid://c5yunbjca2udw" path="res://Scene/RootScene.tscn" id="5_gt4gq"]
+
+[node name="ColorRect2" type="ColorRect" node_paths=PackedStringArray("_menuEmpty", "_menuStart", "_menuSettings", "_menuExit", "_settingsPopup")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_mlx6x")
+_menuEmpty = NodePath("MainMenuNothing")
+_menuStart = NodePath("MainMenuPlay")
+_menuSettings = NodePath("MainMenuSettings")
+_menuExit = NodePath("MainMenuExit")
+_settingsPopup = NodePath("AcceptDialog")
+_target = ExtResource("5_gt4gq")
+
+[node name="MainMenuNothing" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_6utom")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="MainMenuPlay" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_erf1k")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="MainMenuSettings" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_gd0x1")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="MainMenuExit" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_4jrok")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+size = Vector2i(324, 100)
+dialog_text = "Sorry, didn't have time to make settings"
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 338.0
+offset_top = 489.0
+offset_right = 380.0
+offset_bottom = 543.0
+scale = Vector2(2.08488, 1.6325)
+flat = true
+
+[node name="SettingsButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 535.0
+offset_top = 487.0
+offset_right = 577.0
+offset_bottom = 541.0
+scale = Vector2(2.3384, 1.63811)
+flat = true
+
+[node name="ExitButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 740.0
+offset_top = 474.0
+offset_right = 782.0
+offset_bottom = 528.0
+scale = Vector2(2.13109, 2.1997)
+flat = true
+
+[connection signal="mouse_entered" from="StartButton" to="." method="HoverStartEnter"]
+[connection signal="mouse_exited" from="StartButton" to="." method="HoverStartExit"]
+[connection signal="pressed" from="StartButton" to="." method="ClickStart"]
+[connection signal="mouse_entered" from="SettingsButton" to="." method="HoverSettingsEnter"]
+[connection signal="mouse_exited" from="SettingsButton" to="." method="HoverSettingsExit"]
+[connection signal="pressed" from="SettingsButton" to="." method="ClickSettings"]
+[connection signal="mouse_entered" from="ExitButton" to="." method="HoverStopEnter"]
+[connection signal="mouse_exited" from="ExitButton" to="." method="HoverStopExit"]
+[connection signal="pressed" from="ExitButton" to="." method="ClickStop"]

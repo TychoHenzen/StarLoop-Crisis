@@ -11,9 +11,11 @@ config_version=5
 [application]
 
 config/name="StarLoop"
-run/main_scene="res://Scene/RootScene.tscn"
+run/main_scene="res://Scene/MainMenu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
-config/icon="res://Graphics/icon.svg"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="res://Graphics/LogoT.png"
+config/icon="res://Graphics/StarLoop.png"
 
 [dotnet]
 

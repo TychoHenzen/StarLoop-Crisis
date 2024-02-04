@@ -1,0 +1,62 @@
+[gd_scene load_steps=6 format=3 uid="uid://cyxowip2rsa32"]
+
+[ext_resource type="Texture2D" uid="uid://dnd2aslwunmy3" path="res://Graphics/AMPT.png" id="1_arx8v"]
+[ext_resource type="Script" path="res://Script/GUI/MenuScript.cs" id="1_d8jhj"]
+[ext_resource type="Texture2D" uid="uid://b30v38h0qj3jg" path="res://Sound/EpilepsyWarning.png" id="1_ort7m"]
+[ext_resource type="Texture2D" uid="uid://div5jlfj7duw" path="res://Graphics/LogoT.png" id="2_fsiov"]
+[ext_resource type="PackedScene" uid="uid://cdwvbiu0bi541" path="res://Scene/PauseMenu.tscn" id="2_xq4xs"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SplashScreens" type="ColorRect" parent="." node_paths=PackedStringArray("_splash1", "_splash2", "_splash3")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_d8jhj")
+_splash1 = NodePath("LogoSplash")
+_splash2 = NodePath("LogoSplash2")
+_splash3 = NodePath("EpilepsyWarningSplash")
+_target = ExtResource("2_xq4xs")
+
+[node name="LogoSplash" type="TextureRect" parent="SplashScreens"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_fsiov")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="LogoSplash2" type="TextureRect" parent="SplashScreens"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_arx8v")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="EpilepsyWarningSplash" type="TextureRect" parent="SplashScreens"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ort7m")
+expand_mode = 2
+stretch_mode = 5

@@ -33,16 +33,16 @@ public partial class VoxelChunk : MeshInstance3D
     public void LoadIfChanged()
     {
         if (!Engine.IsEditorHint()) return;
-        if (!FileAccess.FileExists($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox"))
-        {
-            var read = FileAccess.Open($"res://voxels/Chunk_0_0_0.gox",
-                FileAccess.ModeFlags.Read);
-            var write = FileAccess.Open($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox",
-                FileAccess.ModeFlags.Write);
-            write.StoreBuffer(read.GetBuffer((long)read.GetLength()));
-            read.Close();
-            write.Close();
-        }
+        // if (!FileAccess.FileExists($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox"))
+        // {
+        //     var read = FileAccess.Open($"res://voxels/Chunk_0_0_0.gox",
+        //         FileAccess.ModeFlags.Read);
+        //     var write = FileAccess.Open($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox",
+        //         FileAccess.ModeFlags.Write);
+        //     write.StoreBuffer(read.GetBuffer((long)read.GetLength()));
+        //     read.Close();
+        //     write.Close();
+        // }
 
         var newHash = FileAccess.GetSha256($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox");
         if (newHash == _hash) return;
@@ -80,12 +80,12 @@ public partial class VoxelChunk : MeshInstance3D
         _collider.Shape = VoxelBuilder.BuildShape(Voxels);
     }
 
-    public bool Redraw(Camera3D playerCamera)
+    public bool Redraw()
     {
         if (Dirty.Count == 0) return false;
 
         if (!VisibilityTester.AnyVoxelsVisible(Dirty, GetViewport())) return false;
-        
+
         VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
         _myMesh.ClearSurfaces();
         _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
@@ -93,7 +93,6 @@ public partial class VoxelChunk : MeshInstance3D
         return true;
     }
 
-    
 
     public void ClearChunk()
     {

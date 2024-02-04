@@ -4,6 +4,7 @@ using StarLoop.Script.Voxels;
 
 namespace StarLoop.Script;
 
+[Icon("res://Graphics/Inventory_SelectCell.png")]
 [Tool]
 public partial class VoxelChunkLoader : Node
 {

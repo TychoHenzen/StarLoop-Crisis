@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Godot;
 using StarLoop.Script.Voxels;
 
@@ -24,8 +23,11 @@ public partial class WireWorldController : Node
         new(1, 1, -1), new(1, 1, 0), new(1, 1, 1)
     };
 
-    [Export] public Camera3D PlayerCam { get; private set; }
     private readonly List<WireWorldRef> _wireWorldVoxels = new();
+
+    private byte[] neighbors = new byte[Offsets.Length];
+
+    [Export] public Camera3D PlayerCam { get; private set; }
     public static int Step { get; private set; }
 
     public void Register(Vector3I position, VoxelChunk chunk)
@@ -45,27 +47,28 @@ public partial class WireWorldController : Node
 
     public void NextStep(VoxelController voxels)
     {
-        // foreach (var entry in WireWorldVoxels)
-        Parallel.ForEach(_wireWorldVoxels, entry =>
+        foreach (var entry in _wireWorldVoxels)
+            // Parallel.ForEach(_wireWorldVoxels, entry =>
         {
-            var neighbors = new byte[Offsets.Length];
             for (var index = 0; index < Offsets.Length; index++)
                 neighbors[index] = voxels.GetVoxel(entry.VoxelPos + Offsets[index]);
 
-            var futures = TransitionRules
-                .Transitions[entry.CurrentValue]
-                .Where(rule => Matches(rule.Neighbors, neighbors))
-                .ToList();
+
+            var transitions = TransitionRules.Transitions[entry.CurrentValue];
+            List<WireWorldTransition> futures = new();
+            foreach (var t in transitions)
+                if (Matches(t.Neighbors, neighbors))
+                    futures.Add(t);
 
             ParseTransition(futures, entry);
-        });
+        }
 
         foreach (var t in _wireWorldVoxels)
         {
             t.Finish();
         }
 
-        voxels.RedrawDirty(this);
+        voxels.RedrawDirty();
         Step++;
     }
 

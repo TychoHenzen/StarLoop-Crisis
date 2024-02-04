@@ -7,8 +7,7 @@ public class WireWorldRef
     private readonly int _index;
     public readonly VoxelChunk Chunk;
     public readonly Vector3I VoxelPos;
-    public byte CurrentValue { get; private set; }
-    public byte NextValue { get; set; }
+    private readonly Vector3 worldPos;
 
     public WireWorldRef(Vector3I voxelPos, VoxelChunk chunk, int index)
     {
@@ -17,7 +16,11 @@ public class WireWorldRef
         _index = index;
         CurrentValue = chunk.Voxels[index];
         NextValue = CurrentValue;
+        worldPos = (VoxelPos + Vector3.One / 2) / VoxelConstants.VoxelScalar;
     }
+
+    public byte CurrentValue { get; private set; }
+    public byte NextValue { get; set; }
 
 
     public void Finish()
@@ -25,7 +28,8 @@ public class WireWorldRef
         if (CurrentValue == NextValue)
             return;
 
-        Chunk.Dirty.Add((VoxelPos+ Vector3.One / 2) / VoxelConstants.VoxelScalar);
+        if (!Chunk.Dirty.Contains(worldPos))
+            Chunk.Dirty.Add(worldPos);
         CurrentValue = NextValue;
         Chunk.Voxels[_index] = CurrentValue;
     }
