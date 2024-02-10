@@ -13,8 +13,6 @@ public static class VisibilityTester
 
         var entries = dirty.Where(camera.IsPositionInFrustum)
             .OrderBy(vector3 => -vector3.DistanceSquaredTo(camera.GlobalPosition));
-        // if (entries.Any())
-        //     return true;
 
         foreach (var candidate in entries)
         {

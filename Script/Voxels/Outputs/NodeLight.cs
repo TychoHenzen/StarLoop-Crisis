@@ -1,6 +1,10 @@
+#region
+
 using Godot;
 using StarLoop.Script;
 using StarLoop.Script.Voxels;
+
+#endregion
 
 namespace StarLoop.Scene;
 
@@ -33,17 +37,15 @@ public partial class NodeLight : OmniLight3D
 
     private void FindLampNearby()
     {
-        for (var offset = new Vector3I(-3, -3, -3); offset.X <= 3; offset.X++)
-        for (offset.Y = -3; offset.Y <= 3; offset.Y++)
-        for (offset.Z = -3; offset.Z <= 3; offset.Z++)
+        new Vector3I(-3, -3, -3).ForUntil(new Vector3I(3, 3, 3), offset =>
         {
             var currentVoxel = (Cell)_ctrl.GetVoxel(_targetVoxel + offset);
             if (currentVoxel != Cell.Lamp1 && currentVoxel != Cell.Lamp2 && currentVoxel != Cell.Lamp3 &&
-                currentVoxel != Cell.Lamp4) continue;
+                currentVoxel != Cell.Lamp4) return false;
 
             _targetVoxel += offset;
-            return;
-        }
+            return true;
+        });
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

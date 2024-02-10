@@ -1,4 +1,8 @@
+#region
+
 using Godot;
+
+#endregion
 
 namespace StarLoop.Script.Extensions;
 
@@ -12,7 +16,7 @@ public static class NodeHelpers
                 return t;
             if (!recursive) continue;
 
-            var recurse = child.FirstChild<T>();
+            var recurse = child.FirstChild<T>(true);
             if (recurse != null)
                 return recurse;
         }

@@ -6,33 +6,22 @@ using StarLoop.Script.Voxels;
 
 #endregion
 
-namespace StarLoop.Script;
+namespace StarLoop.addons.chunkLoader;
 
-[Icon("res://Graphics/Inventory_SelectCell.png")]
 [Tool]
-public partial class VoxelChunkLoader : Node
+public partial class VoxelChunkLoader : EditorPlugin
 {
-    [Export] private bool ShouldRun { get; set; }
-    [Export] private bool ShouldClear { get; set; }
-
-
-    public override void _Process(double delta)
+    public override void _Notification(int what)
     {
-        if (!Engine.IsEditorHint()) return;
-
-        foreach (var chunk in GetChunks(GetTree().Root))
+        if (what == NotificationWMWindowFocusOut)
         {
-            chunk.LoadIfChanged();
-        }
-
-        if (!ShouldRun) return;
-        ShouldRun = false;
-        if (ShouldClear)
-        {
+            GD.Print("clearing");
             foreach (var chunk in GetChunks(GetTree().Root)) chunk.ClearChunk();
         }
-        else
+
+        if (what == NotificationWMWindowFocusIn)
         {
+            GD.Print("loading");
             foreach (var chunk in GetChunks(GetTree().Root)) chunk.LoadChunk();
         }
     }

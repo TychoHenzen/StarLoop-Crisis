@@ -1,7 +1,11 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using Godot;
 using Array = Godot.Collections.Array;
+
+#endregion
 
 namespace StarLoop.Script.Voxels;
 
@@ -33,16 +37,6 @@ public partial class VoxelChunk : MeshInstance3D
     public void LoadIfChanged()
     {
         if (!Engine.IsEditorHint()) return;
-        // if (!FileAccess.FileExists($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox"))
-        // {
-        //     var read = FileAccess.Open($"res://voxels/Chunk_0_0_0.gox",
-        //         FileAccess.ModeFlags.Read);
-        //     var write = FileAccess.Open($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox",
-        //         FileAccess.ModeFlags.Write);
-        //     write.StoreBuffer(read.GetBuffer((long)read.GetLength()));
-        //     read.Close();
-        //     write.Close();
-        // }
 
         var newHash = FileAccess.GetSha256($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox");
         if (newHash == _hash) return;
@@ -96,7 +90,6 @@ public partial class VoxelChunk : MeshInstance3D
 
     public void ClearChunk()
     {
-        Mesh = null;
-        _myMesh = null;
+        _myMesh.ClearSurfaces();
     }
 }

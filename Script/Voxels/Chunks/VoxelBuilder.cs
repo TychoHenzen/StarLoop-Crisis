@@ -1,7 +1,11 @@
+#region
+
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Godot.Collections;
+
+#endregion
 
 namespace StarLoop.Script.Voxels;
 
@@ -21,18 +25,13 @@ public static class VoxelBuilder
         _vertices.Clear();
         _normals.Clear();
         _indices.Clear();
-        for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
-        {
-            for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
-            {
-                for (pos.Z = 0; pos.Z < VoxelConstants.ChunkSize; pos.Z++)
-                {
-                    if (voxelData[VoxelConstants.Index(pos)] != 0)
-                        MeshCube(pos, voxelData);
-                }
-            }
-        }
 
+        new Vector3I().ForUntil(VoxelConstants.VoxelMax, pos =>
+        {
+            if (voxelData[VoxelConstants.Index(pos)] != 0)
+                MeshCube(pos, voxelData);
+            return true;
+        });
         arrays[(int)Mesh.ArrayType.Vertex] = _vertices.ToArray();
         arrays[(int)Mesh.ArrayType.Index] = _indices.ToArray();
         arrays[(int)Mesh.ArrayType.Normal] = _normals.ToArray();
@@ -42,17 +41,12 @@ public static class VoxelBuilder
     public static void UpdateMeshTexture(Array arrays, Vector2[] uvs, byte[] voxelData)
     {
         int counter = 0;
-        for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
+        new Vector3I().ForUntil(VoxelConstants.VoxelMax, pos =>
         {
-            for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
-            {
-                for (pos.Z = 0; pos.Z < VoxelConstants.ChunkSize; pos.Z++)
-                {
-                    if (voxelData[VoxelConstants.Index(pos)] != 0)
-                        TextureCube(pos, uvs, ref counter, voxelData);
-                }
-            }
-        }
+            if (voxelData[VoxelConstants.Index(pos)] != 0)
+                TextureCube(pos, uvs, ref counter, voxelData);
+            return true;
+        });
 
         arrays[(int)Mesh.ArrayType.TexUV] = uvs;
     }
@@ -67,17 +61,13 @@ public static class VoxelBuilder
         _vertices = new List<Vector3>();
         _normals = new List<Vector3>();
         _indices = new List<int>();
-        for (var pos = new Vector3I(); pos.X < VoxelConstants.ChunkSize; pos.X++)
+
+        new Vector3I().ForUntil(VoxelConstants.VoxelMax, pos =>
         {
-            for (pos.Y = 0; pos.Y < VoxelConstants.ChunkSize; pos.Y++)
-            {
-                for (pos.Z = 0; pos.Z < VoxelConstants.ChunkSize; pos.Z++)
-                {
-                    if (voxelData[VoxelConstants.Index(pos)] != 0)
-                        MeshCube(pos, voxelData);
-                }
-            }
-        }
+            if (voxelData[VoxelConstants.Index(pos)] != 0)
+                MeshCube(pos, voxelData);
+            return true;
+        });
 
         returned.Data = _indices.Select(i => _vertices[i]).ToArray();
         return returned;

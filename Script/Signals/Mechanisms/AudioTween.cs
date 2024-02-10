@@ -1,23 +1,28 @@
+#region
+
 using Godot;
+
+#endregion
+
+namespace StarLoop.Script.Signals.Mechanisms;
 
 public partial class AudioTween : Node
 {
     [Signal]
     public delegate void TweenTickEventHandler(double value);
 
-    [Export] private AudioStreamPlayer audio;
+    [Export] private AudioStreamPlayer _audio;
 
-    public ulong LastReset;
+    private ulong _lastReset;
 
     public override void _Process(double delta)
     {
-        // var msSinceStart = Time.Singleton.GetTicksMsec() - LastReset;
-        var fractionOfFiveMinutes = audio.GetPlaybackPosition() / audio.Stream.GetLength();
+        var fractionOfFiveMinutes = _audio.GetPlaybackPosition() / _audio.Stream.GetLength();
         EmitSignal(SignalName.TweenTick, fractionOfFiveMinutes);
     }
 
     public override void _Ready()
     {
-        LastReset = Time.Singleton.GetTicksMsec();
+        _lastReset = Time.Singleton.GetTicksMsec();
     }
 }

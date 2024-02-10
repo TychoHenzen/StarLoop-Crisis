@@ -1,4 +1,10 @@
+#region
+
 using Godot;
+
+#endregion
+
+namespace StarLoop.Script.GUI;
 
 public partial class MenuControl : Control
 {

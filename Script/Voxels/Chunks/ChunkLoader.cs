@@ -1,7 +1,11 @@
+#region
+
 using System.Collections.Generic;
 using System.Globalization;
 using Godot;
 using FileAccess = Godot.FileAccess;
+
+#endregion
 
 namespace StarLoop.Script.Voxels;
 
@@ -52,7 +56,7 @@ public static class ChunkLoader
     {
         var voxels = new byte[VoxelConstants.ChunkVoxels];
         var index = 0;
-        while (!file.EofReached())
+        while (!file.EofReached() && index < 8)
         {
             SeekString(file, "BL16");
             if (file.EofReached()) break;
@@ -63,9 +67,7 @@ public static class ChunkLoader
             img.LoadPngFromBuffer(pngFile);
 
             LoadImage(index, img, voxels);
-            ++index;
-            if (index >= 8)
-                break;
+            index++;
         }
 
         file.Close();

@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bc1ihvth6wxb0" path="res://Sound/Title screen-Settings.png" id="5_gd0x1"]
 [ext_resource type="PackedScene" uid="uid://c5yunbjca2udw" path="res://Scene/RootScene.tscn" id="5_gt4gq"]
 
-[node name="ColorRect2" type="ColorRect" node_paths=PackedStringArray("_menuEmpty", "_menuStart", "_menuSettings", "_menuExit", "_settingsPopup")]
+[node name="ColorRect2" type="ColorRect" node_paths=PackedStringArray("_menuEmpty", "_menuExit", "_menuSettings", "_menuStart", "_settingsPopup")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -16,9 +16,9 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("1_mlx6x")
 _menuEmpty = NodePath("MainMenuNothing")
-_menuStart = NodePath("MainMenuPlay")
-_menuSettings = NodePath("MainMenuSettings")
 _menuExit = NodePath("MainMenuExit")
+_menuSettings = NodePath("MainMenuSettings")
+_menuStart = NodePath("MainMenuPlay")
 _settingsPopup = NodePath("AcceptDialog")
 _target = ExtResource("5_gt4gq")
 

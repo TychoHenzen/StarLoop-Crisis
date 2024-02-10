@@ -1,8 +1,12 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using StarLoop.Script.Voxels;
+
+#endregion
 
 namespace StarLoop.Script;
 
@@ -55,10 +59,10 @@ public partial class WireWorldController : Node
 
 
             var transitions = TransitionRules.Transitions[entry.CurrentValue];
-            List<WireWorldTransition> futures = new();
-            foreach (var t in transitions)
-                if (Matches(t.Neighbors, neighbors))
-                    futures.Add(t);
+            var futures = new List<WireWorldTransition>();
+            foreach (var t in transitions
+                         .Where(transition => Matches(transition.Neighbors, neighbors)))
+                futures.Add(t);
 
             ParseTransition(futures, entry);
         }

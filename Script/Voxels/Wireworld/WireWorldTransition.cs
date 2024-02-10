@@ -1,11 +1,16 @@
+#region
+
 using System;
 using System.Linq;
+
+#endregion
 
 namespace StarLoop.Script.Voxels;
 
 public readonly struct WireWorldTransition : IEquatable<WireWorldTransition>
 {
-    public readonly Rule[] Neighbors;
+    public Rule[] Neighbors { get; }
+
     public readonly byte Self;
     public readonly byte Result;
     public readonly Func<double, bool> Odds;

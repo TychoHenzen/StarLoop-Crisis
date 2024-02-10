@@ -1,4 +1,8 @@
+#region
+
 using Godot;
+
+#endregion
 
 namespace StarLoop.Script.Voxels;
 
@@ -9,6 +13,8 @@ public static class VoxelConstants
     public const int TilesPerRow = 16;
     public static readonly Vector2 TileSize = new(1f / TilesPerRow, 1f / TilesPerRow);
     public static int ChunkVoxels => ChunkSize * ChunkSize * ChunkSize;
+
+    public static Vector3I VoxelMax => new(ChunkSize, ChunkSize, ChunkSize);
 
     public static int Index(int x, int y, int z)
     {

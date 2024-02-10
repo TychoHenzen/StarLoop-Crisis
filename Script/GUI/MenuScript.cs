@@ -1,5 +1,11 @@
+#region
+
 using System.Threading.Tasks;
 using Godot;
+
+#endregion
+
+namespace StarLoop.Script.GUI;
 
 public partial class MenuScript : ColorRect
 {
