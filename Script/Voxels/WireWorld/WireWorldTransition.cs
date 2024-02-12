@@ -6,7 +6,7 @@ using StarLoop.Script.Voxels.Data;
 
 #endregion
 
-namespace StarLoop.Script.Voxels.WireWorld;
+namespace StarLoop.Script.Voxels.WireWorld.Transitions;
 
 public readonly struct WireWorldTransition : IEquatable<WireWorldTransition>
 {

@@ -2,6 +2,7 @@ using GdMUT;
 using Godot;
 using StarLoop.Script.Voxels.Data;
 using StarLoop.Script.Voxels.WireWorld;
+using StarLoop.Script.Voxels.WireWorld.Transitions;
 
 namespace StarLoop.Tests;
 

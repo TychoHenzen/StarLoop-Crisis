@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Godot;
 using StarLoop.Script.Voxels.Data;
+using StarLoop.Script.Voxels.WireWorld.Transitions;
 using static StarLoop.Script.Voxels.Data.Cell;
 using static StarLoop.Script.Voxels.Data.VoxelConstants;
 

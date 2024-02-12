@@ -21,9 +21,12 @@ public partial class VoxelChunk : MeshInstance3D
   public List<Vector3> Dirty { get; } = new();
   public byte[] Voxels { get; private set; } = System.Array.Empty<byte>();
 
-  private const string _shaderPath = "res://Shaders/VoxelMapping.gdshader";
+  private static string ShaderPath => 
+    "res://Shaders/VoxelMapping.gdshader";
+  private static string ChunkPath(Vector3I pos) =>
+    $"res://voxels/Chunk_{pos.X}_{pos.Y}_{pos.Z}.gox";
+  
   private Array _arrays;
-
   private CollisionShape3D _collider;
   private string _hash = "";
   private ImageTexture _mappingTexture;
@@ -32,8 +35,6 @@ public partial class VoxelChunk : MeshInstance3D
   private Image _renderTarget;
   private Vector2[] _uvs;
 
-  private string ChunkPath =>
-    $"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox";
 
 
   // Called when the node enters the scene tree for the first time.
@@ -52,7 +53,7 @@ public partial class VoxelChunk : MeshInstance3D
   {
     if (!Engine.IsEditorHint()) return;
 
-    var newHash = FileAccess.GetSha256(ChunkPath);
+    var newHash = FileAccess.GetSha256(ChunkPath(_chunkPos));
     if (newHash == _hash) return;
 
     LoadChunk();
@@ -62,7 +63,7 @@ public partial class VoxelChunk : MeshInstance3D
   public void LoadChunk()
   {
     Mesh = _myMesh;
-    Voxels = ChunkLoader.LoadGoxFile(FileAccess.Open(ChunkPath,
+    Voxels = ChunkLoader.LoadGoxFile(FileAccess.Open(ChunkPath(_chunkPos),
       FileAccess.ModeFlags.Read));
     VoxelBuilder.BuildMesh(_arrays, Voxels);
     _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
@@ -84,7 +85,7 @@ public partial class VoxelChunk : MeshInstance3D
     _mappingTexture.SetImage(_renderTarget);
 
     _myMat = new ShaderMaterial();
-    _myMat.Shader = GD.Load<Shader>(_shaderPath);
+    _myMat.Shader = GD.Load<Shader>(ShaderPath);
     _myMat.SetShaderParameter("tiles_texture", TileSet);
     _myMat.SetShaderParameter("mapping_texture", _mappingTexture);
     SetSurfaceOverrideMaterial(0, _myMat);

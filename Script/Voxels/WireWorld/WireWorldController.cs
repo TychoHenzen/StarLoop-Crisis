@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using StarLoop.Script.Voxels.Data;
+using StarLoop.Script.Voxels.WireWorld.Transitions;
 using VoxelChunk = StarLoop.Script.Voxels.Chunks.VoxelChunk;
 
 #endregion

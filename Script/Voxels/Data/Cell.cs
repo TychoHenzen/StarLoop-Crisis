@@ -1,9 +1,9 @@
 namespace StarLoop.Script.Voxels.Data;
 
-public enum Cell : byte
+public enum Cell
 {
-    Air,
-    Wire,
+    Air = 0x00_00_00,
+    Wire = 0x01_00_00,
     RedHead,
     RedTail,
     GreenHead,
@@ -16,8 +16,8 @@ public enum Cell : byte
     MagentaTail,
     YellowHead,
     YellowTail,
-    WhiteHead,
-    WhiteTail,
+    WhiteHead = 0x02_00_00,
+    WhiteTail = 0x03_00_00,
 
     RedPanel,
     WireDecay1,
