@@ -131,6 +131,7 @@ public static class VoxelBuilder
         var selfIndex = VoxelConstants.Index(pos);
         var indexer = VoxelConstants.Index(pos, z: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
+        {
             RenderFace(new[]
             {
                 pos + new Vector3(0, 0, 1),
@@ -138,10 +139,12 @@ public static class VoxelBuilder
                 pos + new Vector3(0, 1, 1),
                 pos + new Vector3(1, 1, 1)
             });
+        }
         // Back face
 
         indexer = VoxelConstants.Index(pos, z: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
+        {
             RenderFace(new[]
             {
                 pos + new Vector3(1, 0, 0),
@@ -149,11 +152,13 @@ public static class VoxelBuilder
                 pos + new Vector3(1, 1, 0),
                 pos + new Vector3(0, 1, 0)
             });
+        }
 
-// Left face
+        // Left face
 
         indexer = VoxelConstants.Index(pos, -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
+        {
             RenderFace(new[]
             {
                 pos + new Vector3(0, 0, 0),
@@ -161,10 +166,12 @@ public static class VoxelBuilder
                 pos + new Vector3(0, 1, 0),
                 pos + new Vector3(0, 1, 1)
             });
+        }
 
-// Right face
+        // Right face
         indexer = VoxelConstants.Index(pos, +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
+        {
             RenderFace(new[]
             {
                 pos + new Vector3(1, 0, 1),
@@ -172,10 +179,12 @@ public static class VoxelBuilder
                 pos + new Vector3(1, 1, 1),
                 pos + new Vector3(1, 1, 0)
             });
+        }
 
-// Top face
+        // Top face
         indexer = VoxelConstants.Index(pos, y: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
+        {
             RenderFace(new[]
             {
                 pos + new Vector3(0, 1, 0),
@@ -183,10 +192,12 @@ public static class VoxelBuilder
                 pos + new Vector3(1, 1, 0),
                 pos + new Vector3(1, 1, 1)
             });
+        }
 
-// Bottom face
+        // Bottom face
         indexer = VoxelConstants.Index(pos, y: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
+        {
             RenderFace(new[]
             {
                 pos + new Vector3(0, 0, 0),
@@ -194,6 +205,7 @@ public static class VoxelBuilder
                 pos + new Vector3(0, 0, 1),
                 pos + new Vector3(1, 0, 1)
             });
+        }
     }
 
     private static void RenderFace(IReadOnlyList<Vector3> faceVertices)

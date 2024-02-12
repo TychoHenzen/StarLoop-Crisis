@@ -24,7 +24,7 @@ public partial class VoxelChunk : MeshInstance3D
     private Image _renderTarget;
     private Vector2[] _uvs;
 
-    [Export] public Texture2D TileSet;
+    [field: Export] private Texture2D TileSet { get; set; }
     public List<Vector3> Dirty { get; } = new();
     public byte[] Voxels { get; private set; } = System.Array.Empty<byte>();
 
@@ -118,9 +118,16 @@ public partial class VoxelChunk : MeshInstance3D
 
         if (!VisibilityTester.AnyVoxelsVisible(Dirty, GetViewport())) return false;
 
-        VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
-        _myMesh.ClearSurfaces();
-        _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
+        Dirty.ForEach(pos =>
+        {
+            var index = VoxelConstants.Index((Vector3I)pos);
+            if (Voxels[index] == 0) return;
+            var uv = VoxelBuilder.VoxelUv(index);
+
+            _renderTarget.SetPixelv(uv,
+                Color.Color8(Voxels[index], 0, 0)
+            );
+        });
         Dirty.Clear();
         return true;
     }
