@@ -77,39 +77,47 @@ public static class VoxelBuilder
     private static void TextureCube(Vector3I pos, Vector2[] uvs, ref int counter, byte[] voxelData)
     {
         var selfIndex = VoxelConstants.Index(pos);
-        var faceColor = GetUvForByte(voxelData[selfIndex]);
-
+        var voxelUv = (Vector2)VoxelUv(selfIndex) / VoxelConstants.TextureMapSize;
         var indexer = VoxelConstants.Index(pos, z: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(uvs, ref counter, faceColor);
+            TextureFace(uvs, ref counter, voxelUv);
         // Back face
 
         indexer = VoxelConstants.Index(pos, z: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(uvs, ref counter, faceColor);
+            TextureFace(uvs, ref counter, voxelUv);
 
 // Left face
         indexer = VoxelConstants.Index(pos, -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(uvs, ref counter, faceColor);
+            TextureFace(uvs, ref counter, voxelUv);
 
 // Right face
         indexer = VoxelConstants.Index(pos, +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(uvs, ref counter, faceColor);
+            TextureFace(uvs, ref counter, voxelUv);
 
 // Top face
         indexer = VoxelConstants.Index(pos, y: +1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(uvs, ref counter, faceColor);
+            TextureFace(uvs, ref counter, voxelUv);
 
 // Bottom face
         indexer = VoxelConstants.Index(pos, y: -1);
         if (ShouldRender(voxelData, indexer, selfIndex))
-            TextureFace(uvs, ref counter, faceColor);
+            TextureFace(uvs, ref counter, voxelUv);
     }
 
-// Helper function to add a face
+    public static Vector2I VoxelUv(int selfIndex)
+    {
+        var voxelX = selfIndex % VoxelConstants.TextureMapSize;
+        var voxelY = selfIndex / VoxelConstants.TextureMapSize;
+
+        var voxelUv = new Vector2I(voxelX, voxelY);
+        return voxelUv;
+    }
+
+    // Helper function to add a face
     private static void TextureFace(Vector2[] uvs, ref int index, Vector2 uv)
     {
         uvs[index++] = uv + Right; // Bottom-right

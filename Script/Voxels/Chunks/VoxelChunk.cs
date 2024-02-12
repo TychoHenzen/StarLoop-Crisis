@@ -12,13 +12,19 @@ namespace StarLoop.Script.Voxels;
 [Tool]
 public partial class VoxelChunk : MeshInstance3D
 {
+    private const string ShaderPath = "res://Shaders/VoxelMapping.gdshader";
     private Array _arrays;
     [Export] private Vector3I _chunkPos;
 
     private CollisionShape3D _collider;
     private string _hash = "";
+    private ImageTexture _mappingTexture;
+    private ShaderMaterial _myMat;
     private ArrayMesh _myMesh;
+    private Image _renderTarget;
     private Vector2[] _uvs;
+
+    [Export] public Texture2D TileSet;
     public List<Vector3> Dirty { get; } = new();
     public byte[] Voxels { get; private set; } = System.Array.Empty<byte>();
 
@@ -47,6 +53,7 @@ public partial class VoxelChunk : MeshInstance3D
 
     public void LoadChunk()
     {
+        Mesh = _myMesh;
         Voxels = ChunkLoader.LoadGoxFile(FileAccess.Open(
             $"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox",
             FileAccess.ModeFlags.Read));
@@ -55,6 +62,37 @@ public partial class VoxelChunk : MeshInstance3D
         VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
         _myMesh.ClearSurfaces();
         _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
+
+        _renderTarget = new Image();
+        _renderTarget.SetData(
+            VoxelConstants.TextureMapSize,
+            VoxelConstants.TextureMapSize,
+            false,
+            Image.Format.Rgba8,
+            new byte[VoxelConstants.TextureMapSize * VoxelConstants.TextureMapSize * 4]
+        );
+
+        Vector3I.Zero.ForUntil(VoxelConstants.VoxelMax, pos =>
+        {
+            var index = VoxelConstants.Index(pos);
+            if (Voxels[index] == 0) return true;
+            var uv = VoxelBuilder.VoxelUv(index);
+
+            _renderTarget.SetPixelv(uv,
+                Color.Color8(Voxels[index], 0, 0)
+            );
+            return true;
+        });
+        _mappingTexture = new ImageTexture();
+        _mappingTexture.SetImage(_renderTarget);
+
+        _myMat = new ShaderMaterial();
+        _myMat.Shader = GD.Load<Shader>(ShaderPath);
+        _myMat.SetShaderParameter("tiles_texture", TileSet);
+        _myMat.SetShaderParameter("mapping_texture", _mappingTexture);
+        SetSurfaceOverrideMaterial(0, _myMat);
+
+
         if (Engine.IsEditorHint()) return;
 
         _collider.Shape = VoxelBuilder.BuildShape(Voxels);
@@ -91,5 +129,6 @@ public partial class VoxelChunk : MeshInstance3D
     public void ClearChunk()
     {
         _myMesh.ClearSurfaces();
+        Mesh = null;
     }
 }

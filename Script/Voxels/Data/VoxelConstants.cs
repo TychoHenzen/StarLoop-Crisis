@@ -11,7 +11,8 @@ public static class VoxelConstants
     public const int ChunkSize = 32;
     public const int VoxelScalar = 8;
     public const int TilesPerRow = 16;
-    public static readonly Vector2 TileSize = new(1f / TilesPerRow, 1f / TilesPerRow);
+    public const int TextureMapSize = 256;
+    public static readonly Vector2 TileSize = new(1f / TextureMapSize, 1f / TextureMapSize);
     public static int ChunkVoxels => ChunkSize * ChunkSize * ChunkSize;
 
     public static Vector3I VoxelMax => new(ChunkSize, ChunkSize, ChunkSize);
