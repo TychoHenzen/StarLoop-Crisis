@@ -26,7 +26,7 @@
 [ext_resource type="Script" path="res://Script/Voxels/Chunks/VoxelController.cs" id="19_vi7ua"]
 [ext_resource type="Script" path="res://Script/Voxels/Loading/VoxelChunkLoader.cs" id="20_80ed6"]
 [ext_resource type="Script" path="res://Script/Voxels/Outputs/NodeLight.cs" id="20_umric"]
-[ext_resource type="Script" path="res://Script/Voxels/Wireworld/WireWorldController.cs" id="21_hy8nb"]
+[ext_resource type="Script" path="res://Script/Voxels/WireWorld/WireWorldController.cs" id="21_t7a2q"]
 [ext_resource type="Texture2D" uid="uid://bkvtm8x8y7u82" path="res://Graphics/SpriteSheet.png" id="22_b8rxk"]
 [ext_resource type="AudioStream" uid="uid://dxbchfqa6j22s" path="res://Sound/Sad_Box_Song.mp3" id="22_qb4xk"]
 [ext_resource type="Script" path="res://Script/Voxels/Chunks/VoxelChunk.cs" id="23_3mwop"]
@@ -427,7 +427,7 @@ _wireWorld = NodePath("Wireworld")
 script = ExtResource("20_80ed6")
 
 [node name="Wireworld" type="Node" parent="World" node_paths=PackedStringArray("PlayerCam")]
-script = ExtResource("21_hy8nb")
+script = ExtResource("21_t7a2q")
 PlayerCam = NodePath("../../Player/CollisionShape3D/Camera3D")
 
 [node name="Chunk(-1,0,1)" type="StaticBody3D" parent="World"]
