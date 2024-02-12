@@ -30,8 +30,8 @@ public sealed class WireWorldRef
     if (CurrentValue == NextValue)
       return;
 
-    if (!Chunk.Dirty.Contains(_worldPos))
-      Chunk.Dirty.Add(_worldPos);
+    if (!Chunk.Dirty.Contains((_index, _worldPos)))
+      Chunk.Dirty.Add((_index, _worldPos));
     CurrentValue = NextValue;
     Chunk.Voxels[_index] = CurrentValue;
   }
