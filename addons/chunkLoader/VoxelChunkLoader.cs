@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using Godot;
-using StarLoop.Script.Voxels;
+using StarLoop.Script.Voxels.Chunks;
 
 #endregion
 
@@ -11,36 +11,36 @@ namespace StarLoop.addons.chunkLoader;
 [Tool]
 public partial class VoxelChunkLoader : EditorPlugin
 {
-    public override void _Notification(int what)
+  public override void _Notification(int what)
+  {
+    if (what == NotificationWMWindowFocusOut)
     {
-        if (what == NotificationWMWindowFocusOut)
-        {
-            GD.Print("clearing");
-            foreach (var chunk in GetChunks(GetTree().Root)) chunk.ClearChunk();
-        }
-
-        if (what == NotificationWMWindowFocusIn)
-        {
-            GD.Print("loading");
-            foreach (var chunk in GetChunks(GetTree().Root)) chunk.LoadChunk();
-        }
+      GD.Print("clearing");
+      foreach (var chunk in GetChunks(GetTree().Root)) chunk.ClearChunk();
     }
 
-    private IEnumerable<VoxelChunk> GetChunks(Node rootNode)
+    else if (what == NotificationWMWindowFocusIn)
     {
-        foreach (var child in rootNode.GetChildren())
-        {
-            // Check if the child is of type VoxelChunk
-            if (child is VoxelChunk chunk)
-            {
-                yield return chunk;
-            }
-
-            // Recursively search through the children of the child node
-            foreach (var voxelChunk in GetChunks(child))
-            {
-                yield return voxelChunk;
-            }
-        }
+      GD.Print("loading");
+      foreach (var chunk in GetChunks(GetTree().Root)) chunk.LoadChunk();
     }
+  }
+
+  private IEnumerable<VoxelChunk> GetChunks(Node rootNode)
+  {
+    foreach (var child in rootNode.GetChildren())
+    {
+      // Check if the child is of type VoxelChunk
+      if (child is VoxelChunk chunk)
+      {
+        yield return chunk;
+      }
+
+      // Recursively search through the children of the child node
+      foreach (var voxelChunk in GetChunks(child))
+      {
+        yield return voxelChunk;
+      }
+    }
+  }
 }

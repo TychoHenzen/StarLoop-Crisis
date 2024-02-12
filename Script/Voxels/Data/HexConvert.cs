@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace StarLoop.Script.Voxels;
+namespace StarLoop.Script.Voxels.Data;
 
 public static class HexConvert
 {

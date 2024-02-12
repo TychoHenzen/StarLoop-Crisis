@@ -2,56 +2,54 @@
 
 using System.Collections.Generic;
 using Godot;
-using StarLoop.Script.Voxels;
+using VoxelChunk = StarLoop.Script.Voxels.Chunks.VoxelChunk;
 
 #endregion
 
-namespace StarLoop.Script;
+namespace StarLoop.Script.Voxels.Loading;
 
 [Icon("res://Graphics/Inventory_SelectCell.png")]
 [Tool]
 public partial class VoxelChunkLoader : Node
 {
-    [Export] private bool ShouldRun { get; set; }
-    [Export] private bool ShouldClear { get; set; }
+  [Export] private bool ShouldRun { get; set; }
+  [Export] private bool ShouldClear { get; set; }
 
+  public override void _Process(double delta)
+  {
+    if (!Engine.IsEditorHint()) return;
 
-    public override void _Process(double delta)
+    foreach (var chunk in GetChunks(GetTree().Root))
     {
-        if (!Engine.IsEditorHint()) return;
-
-        foreach (var chunk in GetChunks(GetTree().Root))
-        {
-            chunk.LoadIfChanged();
-        }
-
-        if (!ShouldRun) return;
-        ShouldRun = false;
-        if (ShouldClear)
-        {
-            foreach (var chunk in GetChunks(GetTree().Root)) chunk.ClearChunk();
-        }
-        else
-        {
-            foreach (var chunk in GetChunks(GetTree().Root)) chunk.LoadChunk();
-        }
+      chunk.LoadIfChanged();
     }
 
-    private IEnumerable<VoxelChunk> GetChunks(Node rootNode)
-    {
-        foreach (var child in rootNode.GetChildren())
-        {
-            // Check if the child is of type VoxelChunk
-            if (child is VoxelChunk chunk)
-            {
-                yield return chunk;
-            }
+    if (!ShouldRun) return;
 
-            // Recursively search through the children of the child node
-            foreach (var voxelChunk in GetChunks(child))
-            {
-                yield return voxelChunk;
-            }
-        }
+    ShouldRun = false;
+
+    foreach (var chunk in GetChunks(GetTree().Root))
+    {
+      if (ShouldClear) chunk.ClearChunk();
+      else chunk.LoadChunk();
     }
+  }
+
+  private static IEnumerable<VoxelChunk> GetChunks(Node rootNode)
+  {
+    foreach (var child in rootNode.GetChildren())
+    {
+      // Check if the child is of type VoxelChunk
+      if (child is VoxelChunk chunk)
+      {
+        yield return chunk;
+      }
+
+      // Recursively search through the children of the child node
+      foreach (var voxelChunk in GetChunks(child))
+      {
+        yield return voxelChunk;
+      }
+    }
+  }
 }

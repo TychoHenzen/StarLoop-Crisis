@@ -1,12 +1,12 @@
 using Godot;
 
-namespace StarLoop.Script;
+namespace StarLoop.Script.Helpers;
 
-public partial class SelfDestruct : Node
+public sealed partial class SelfDestruct : Node
 {
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        QueueFree();
-    }
+  // Called when the node enters the scene tree for the first time.
+  public override void _Ready()
+  {
+    QueueFree();
+  }
 }

@@ -1,12 +1,12 @@
 using Godot;
 
-namespace StarLoop.Script;
+namespace StarLoop.Script.Helpers;
 
-public partial class Rotator : CsgTorus3D
+public sealed partial class Rotator : CsgTorus3D
 {
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-        RotateZ((float)delta * 2);
-    }
+  // Called every frame. 'delta' is the elapsed time since the previous frame.
+  public override void _Process(double delta)
+  {
+    RotateZ((float)delta * 2);
+  }
 }

@@ -2,51 +2,44 @@ using Godot;
 
 namespace StarLoop.Script.Signals.Mechanisms;
 
-public partial class Pusher : Node
+public sealed partial class Pusher : Node
 {
-    [Signal]
-    public delegate void HitMaxEventHandler();
+  [Signal] public delegate void HitMaxEventHandler();
+  [Signal] public delegate void HitMinEventHandler();
+  [Signal] public delegate void OnStepEventHandler(float level);
 
-    [Signal]
-    public delegate void HitMinEventHandler();
+  [Export] private float _currentT;
+  [Export] private float _lowerSpeed;
+  [Export] private float _maxValue;
+  [Export] private float _minValue;
+  [Export] private float _raiseSpeed;
 
-    [Signal]
-    public delegate void OnStepEventHandler(float level);
-
-    [Export] private float _currentT;
-    [Export] private float _lowerSpeed;
-
-    [Export] private float _maxValue;
-    [Export] private float _minValue;
-
-    [Export] private float _raiseSpeed;
-
-    public void Raise(float value)
+  public void Raise(float value)
+  {
+    _currentT += value * _raiseSpeed;
+    if (_currentT >= 1)
     {
-        _currentT += value * _raiseSpeed;
-        if (_currentT >= 1)
-        {
-            EmitSignal(SignalName.HitMax);
-            _currentT = 1;
-        }
-
-        OnSignal();
+      EmitSignal(SignalName.HitMax);
+      _currentT = 1;
     }
 
-    public void Lower(float value)
-    {
-        _currentT -= value * _lowerSpeed;
-        if (_currentT <= 0)
-        {
-            EmitSignal(SignalName.HitMin);
-            _currentT = 0;
-        }
+    OnSignal();
+  }
 
-        OnSignal();
+  public void Lower(float value)
+  {
+    _currentT -= value * _lowerSpeed;
+    if (_currentT <= 0)
+    {
+      EmitSignal(SignalName.HitMin);
+      _currentT = 0;
     }
 
-    public void OnSignal()
-    {
-        EmitSignal(SignalName.OnStep, Mathf.Lerp(_minValue, _maxValue, _currentT));
-    }
+    OnSignal();
+  }
+
+  public void OnSignal()
+  {
+    EmitSignal(SignalName.OnStep, Mathf.Lerp(_minValue, _maxValue, _currentT));
+  }
 }

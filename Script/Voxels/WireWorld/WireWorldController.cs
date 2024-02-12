@@ -4,15 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using StarLoop.Script.Voxels;
+using StarLoop.Script.Voxels.Data;
+using VoxelChunk = StarLoop.Script.Voxels.Chunks.VoxelChunk;
 
 #endregion
 
-namespace StarLoop.Script;
+namespace StarLoop.Script.Voxels.WireWorld;
 
-public partial class WireWorldController : Node
+public sealed partial class WireWorldController : Node
 {
-  private static readonly Vector3I[] Offsets =
+  [Export] public Camera3D PlayerCam { get; private set; }
+
+  private static readonly Vector3I[] _offsets =
   {
     new(-1, -1, -1), new(-1, -1, 0), new(-1, -1, 1),
     new(-1, 0, -1), new(-1, 0, 0), new(-1, 0, 1),
@@ -29,9 +32,8 @@ public partial class WireWorldController : Node
 
   private readonly List<WireWorldRef> _wireWorldVoxels = new();
 
-  private byte[] neighbors = new byte[Offsets.Length];
+  private readonly byte[] _neighbors = new byte[_offsets.Length];
 
-  [Export] public Camera3D PlayerCam { get; private set; }
   public static int Step { get; private set; }
 
   public void Register(Vector3I position, VoxelChunk chunk)
@@ -49,17 +51,17 @@ public partial class WireWorldController : Node
     }
   }
 
-  public void NextStep(VoxelController voxels)
+  public void NextStep(Chunks.VoxelController voxels)
   {
     foreach (var entry in _wireWorldVoxels)
     {
-      for (var index = 0; index < Offsets.Length; index++)
-        neighbors[index] = voxels.GetVoxel(entry.VoxelPos + Offsets[index]);
+      for (var index = 0; index < _offsets.Length; index++)
+        _neighbors[index] = voxels.GetVoxel(entry.VoxelPos + _offsets[index]);
 
       var transitions = TransitionRules.Transitions[entry.CurrentValue];
       var futures = new List<WireWorldTransition>();
       foreach (var t in transitions
-                 .Where(transition => Matches(transition.Neighbors, neighbors)))
+                 .Where(transition => Matches(transition.Neighbors, _neighbors)))
         futures.Add(t);
 
       ParseTransition(futures, entry);
@@ -90,7 +92,7 @@ public partial class WireWorldController : Node
       default:
       {
         entry.NextValue = futures
-          .FirstOrDefault(future => future.Odds(Random.Shared.NextDouble()),
+          .FirstOrDefault(static future => future.Odds(Random.Shared.NextDouble()),
             new WireWorldTransition(null, 0, entry.NextValue))
           .Result;
         break;

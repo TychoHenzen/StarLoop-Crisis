@@ -3,139 +3,138 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using StarLoop.Script.Helpers;
+using StarLoop.Script.Voxels.Data;
+using StarLoop.Script.Voxels.Helpers;
 using Array = Godot.Collections.Array;
 
 #endregion
 
-namespace StarLoop.Script.Voxels;
+namespace StarLoop.Script.Voxels.Chunks;
 
 [Tool]
 public partial class VoxelChunk : MeshInstance3D
 {
-    private const string ShaderPath = "res://Shaders/VoxelMapping.gdshader";
-    private Array _arrays;
-    [Export] private Vector3I _chunkPos;
+  [Export] private Vector3I _chunkPos;
+  [Export] private Texture2D TileSet { get; set; }
 
-    private CollisionShape3D _collider;
-    private string _hash = "";
-    private ImageTexture _mappingTexture;
-    private ShaderMaterial _myMat;
-    private ArrayMesh _myMesh;
-    private Image _renderTarget;
-    private Vector2[] _uvs;
+  public List<Vector3> Dirty { get; } = new();
+  public byte[] Voxels { get; private set; } = System.Array.Empty<byte>();
 
-    [field: Export] private Texture2D TileSet { get; set; }
-    public List<Vector3> Dirty { get; } = new();
-    public byte[] Voxels { get; private set; } = System.Array.Empty<byte>();
+  private const string _shaderPath = "res://Shaders/VoxelMapping.gdshader";
+  private Array _arrays;
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        _collider = GetParent<CollisionShape3D>();
-        _chunkPos = (Vector3I)(GlobalPosition / (VoxelConstants.VoxelScalar / 2f)).Floor();
-        _arrays = new Array();
-        _arrays.Resize((int)Mesh.ArrayType.Max);
-        _myMesh = new ArrayMesh();
-        Mesh = _myMesh;
-        LoadChunk();
-    }
+  private CollisionShape3D _collider;
+  private string _hash = "";
+  private ImageTexture _mappingTexture;
+  private ShaderMaterial _myMat;
+  private ArrayMesh _myMesh;
+  private Image _renderTarget;
+  private Vector2[] _uvs;
 
-    public void LoadIfChanged()
-    {
-        if (!Engine.IsEditorHint()) return;
-
-        var newHash = FileAccess.GetSha256($"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox");
-        if (newHash == _hash) return;
-
-        LoadChunk();
-        _hash = newHash;
-    }
-
-    public void LoadChunk()
-    {
-        Mesh = _myMesh;
-        Voxels = ChunkLoader.LoadGoxFile(FileAccess.Open(
-            $"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox",
-            FileAccess.ModeFlags.Read));
-        VoxelBuilder.BuildMesh(_arrays, Voxels);
-        _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
-        VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
-        _myMesh.ClearSurfaces();
-        _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
-
-        _renderTarget = new Image();
-        _renderTarget.SetData(
-            VoxelConstants.TextureMapSize,
-            VoxelConstants.TextureMapSize,
-            false,
-            Image.Format.Rgba8,
-            new byte[VoxelConstants.TextureMapSize * VoxelConstants.TextureMapSize * 4]
-        );
-
-        Vector3I.Zero.ForUntil(VoxelConstants.VoxelMax, pos =>
-        {
-            var index = VoxelConstants.Index(pos);
-            if (Voxels[index] == 0) return true;
-            var uv = VoxelBuilder.VoxelUv(index);
-
-            _renderTarget.SetPixelv(uv,
-                Color.Color8(Voxels[index], 0, 0)
-            );
-            return true;
-        });
-        _mappingTexture = new ImageTexture();
-        _mappingTexture.SetImage(_renderTarget);
-
-        _myMat = new ShaderMaterial();
-        _myMat.Shader = GD.Load<Shader>(ShaderPath);
-        _myMat.SetShaderParameter("tiles_texture", TileSet);
-        _myMat.SetShaderParameter("mapping_texture", _mappingTexture);
-        SetSurfaceOverrideMaterial(0, _myMat);
+  private string ChunkPath =>
+    $"res://voxels/Chunk_{_chunkPos.X}_{_chunkPos.Y}_{_chunkPos.Z}.gox";
 
 
-        if (Engine.IsEditorHint()) return;
+  // Called when the node enters the scene tree for the first time.
+  public override void _Ready()
+  {
+    _collider = GetParent<CollisionShape3D>();
+    _chunkPos = (Vector3I)(GlobalPosition / (VoxelConstants.VoxelScalar / 2f)).Floor();
+    _arrays = new Array();
+    _arrays.Resize((int)Mesh.ArrayType.Max);
+    _myMesh = new ArrayMesh();
+    Mesh = _myMesh;
+    LoadChunk();
+  }
 
-        _collider.Shape = VoxelBuilder.BuildShape(Voxels);
-        GD.Print($"{DateTime.Now:O} Registering {_chunkPos}");
-        GetParent().GetParent().GetParent<VoxelController>().Register(_chunkPos, this);
-    }
+  public void LoadIfChanged()
+  {
+    if (!Engine.IsEditorHint()) return;
 
-    public void SetVoxel(Vector3I pos, byte newByte)
-    {
-        Voxels[VoxelConstants.Index(pos)] = newByte;
-        VoxelBuilder.BuildMesh(_arrays, Voxels);
+    var newHash = FileAccess.GetSha256(ChunkPath);
+    if (newHash == _hash) return;
 
-        _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
-        VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
-        _myMesh.ClearSurfaces();
-        _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
-        _collider.Shape = VoxelBuilder.BuildShape(Voxels);
-    }
+    LoadChunk();
+    _hash = newHash;
+  }
 
-    public bool Redraw()
-    {
-        if (Dirty.Count == 0) return false;
+  public void LoadChunk()
+  {
+    Mesh = _myMesh;
+    Voxels = ChunkLoader.LoadGoxFile(FileAccess.Open(ChunkPath,
+      FileAccess.ModeFlags.Read));
+    VoxelBuilder.BuildMesh(_arrays, Voxels);
+    _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
+    VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
+    _myMesh.ClearSurfaces();
+    _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
 
-        if (!VisibilityTester.AnyVoxelsVisible(Dirty, GetViewport())) return false;
+    _renderTarget = new Image();
+    _renderTarget.SetData(
+      VoxelConstants.TextureMapSize,
+      VoxelConstants.TextureMapSize,
+      false,
+      Image.Format.Rgba8,
+      new byte[VoxelConstants.TextureMapSize * VoxelConstants.TextureMapSize * 4]
+    );
 
-        Dirty.ForEach(pos =>
-        {
-            var index = VoxelConstants.Index((Vector3I)pos);
-            if (Voxels[index] == 0) return;
-            var uv = VoxelBuilder.VoxelUv(index);
+    Vector3I.Zero.ForEach(VoxelConstants.VoxelMax, UpdateVoxel);
+    _mappingTexture = new ImageTexture();
+    _mappingTexture.SetImage(_renderTarget);
 
-            _renderTarget.SetPixelv(uv,
-                Color.Color8(Voxels[index], 0, 0)
-            );
-        });
-        Dirty.Clear();
-        return true;
-    }
+    _myMat = new ShaderMaterial();
+    _myMat.Shader = GD.Load<Shader>(_shaderPath);
+    _myMat.SetShaderParameter("tiles_texture", TileSet);
+    _myMat.SetShaderParameter("mapping_texture", _mappingTexture);
+    SetSurfaceOverrideMaterial(0, _myMat);
+
+    if (Engine.IsEditorHint()) return;
+
+    _collider.Shape = VoxelBuilder.BuildShape(Voxels);
+    GD.Print($"{DateTime.Now:O} Registering {_chunkPos}");
+    GetParent().GetParent().GetParent<VoxelController>().Register(_chunkPos, this);
+  }
+
+  public void SetVoxel(Vector3I pos, byte newByte)
+  {
+    Voxels[VoxelConstants.Index(pos)] = newByte;
+    VoxelBuilder.BuildMesh(_arrays, Voxels);
+
+    _uvs = _arrays[(int)Mesh.ArrayType.Vertex].AsVector2Array();
+    VoxelBuilder.UpdateMeshTexture(_arrays, _uvs, Voxels);
+    _myMesh.ClearSurfaces();
+    _myMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _arrays);
+    _collider.Shape = VoxelBuilder.BuildShape(Voxels);
+  }
+
+  public bool Redraw()
+  {
+    if (Dirty.Count == 0) return false;
+
+    if (!VisibilityTester.AnyVoxelsVisible(Dirty, GetViewport())) return false;
+
+    Dirty.ForEach(UpdateVoxel);
+    Dirty.Clear();
+    return true;
+  }
 
 
-    public void ClearChunk()
-    {
-        _myMesh.ClearSurfaces();
-        Mesh = null;
-    }
+  private void UpdateVoxel(Vector3 pos)
+  {
+    var index = VoxelConstants.Index((Vector3I)pos);
+    if (Voxels[index] == 0) return;
+
+    var uv = VoxelBuilder.VoxelUv(index);
+
+    _renderTarget.SetPixelv(uv,
+      Color.Color8(Voxels[index], 0, 0)
+    );
+  }
+
+  public void ClearChunk()
+  {
+    _myMesh.ClearSurfaces();
+    Mesh = null;
+  }
 }

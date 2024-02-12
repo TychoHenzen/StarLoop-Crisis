@@ -1,4 +1,4 @@
-namespace StarLoop.Script.Voxels;
+namespace StarLoop.Script.Voxels.Data;
 
 public enum Cell : byte
 {
