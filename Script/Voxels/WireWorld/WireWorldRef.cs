@@ -10,6 +10,8 @@ public sealed class WireWorldRef
   public readonly Vector3I VoxelPos;
 
   private readonly Vector3 _worldPos;
+  
+  public Vector3I[] Neighbors { get; }
 
   public WireWorldRef(Vector3I voxelPos, Chunks.VoxelChunk chunk, int index)
   {
@@ -19,6 +21,36 @@ public sealed class WireWorldRef
     CurrentValue = chunk.Voxels[index];
     NextValue = CurrentValue;
     _worldPos = (VoxelPos + Vector3.One / 2) / VoxelConstants.VoxelScalar;
+    
+    Neighbors = new[]
+    {
+      VoxelPos + new Vector3I(-1, -1, -1),
+      VoxelPos + new Vector3I(-1, -1, 0),
+      VoxelPos + new Vector3I(-1, -1, 1),
+      VoxelPos + new Vector3I(-1, 0, -1),
+      VoxelPos + new Vector3I(-1, 0, 0),
+      VoxelPos + new Vector3I(-1, 0, 1),
+      VoxelPos + new Vector3I(-1, 1, -1),
+      VoxelPos + new Vector3I(-1, 1, 0),
+      VoxelPos + new Vector3I(-1, -1, -1),
+      VoxelPos + new Vector3I(0, -1, -1),
+      VoxelPos + new Vector3I(0, -1, 0),
+      VoxelPos + new Vector3I(0, -1, 1),
+      VoxelPos + new Vector3I(0, 0, -1),
+      VoxelPos + new Vector3I(0, 0, 1),
+      VoxelPos + new Vector3I(0, 1, -1),
+      VoxelPos + new Vector3I(0, 1, 0),
+      VoxelPos + new Vector3I(0, 1, 1),
+      VoxelPos + new Vector3I(1, -1, -1),
+      VoxelPos + new Vector3I(1, -1, 0),
+      VoxelPos + new Vector3I(1, -1, 1),
+      VoxelPos + new Vector3I(1, 0, -1),
+      VoxelPos + new Vector3I(1, 0, 0),
+      VoxelPos + new Vector3I(1, 0, 1),
+      VoxelPos + new Vector3I(1, 1, -1),
+      VoxelPos + new Vector3I(1, 1, 0),
+      VoxelPos + new Vector3I(1, 1, 1),
+    };
   }
 
   public byte CurrentValue { get; private set; }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using StarLoop.Script.Voxels.Chunks;
 using StarLoop.Script.Voxels.Data;
 using StarLoop.Script.Voxels.WireWorld.Transitions;
 using VoxelChunk = StarLoop.Script.Voxels.Chunks.VoxelChunk;
@@ -16,24 +17,7 @@ public sealed partial class WireWorldController : Node
 {
   [Export] public Camera3D PlayerCam { get; private set; }
 
-  private static readonly Vector3I[] _offsets =
-  {
-    new(-1, -1, -1), new(-1, -1, 0), new(-1, -1, 1),
-    new(-1, 0, -1), new(-1, 0, 0), new(-1, 0, 1),
-    new(-1, 1, -1), new(-1, 1, 0), new(-1, 1, 1),
-
-    new(0, -1, -1), new(0, -1, 0), new(0, -1, 1),
-    new(0, 0, -1), new(0, 0, 1),
-    new(0, 1, -1), new(0, 1, 0), new(0, 1, 1),
-
-    new(1, -1, -1), new(1, -1, 0), new(1, -1, 1),
-    new(1, 0, -1), new(1, 0, 0), new(1, 0, 1),
-    new(1, 1, -1), new(1, 1, 0), new(1, 1, 1)
-  };
-
   private readonly List<WireWorldRef> _wireWorldVoxels = new();
-
-  private readonly byte[] _neighbors = new byte[_offsets.Length];
 
   public static int Step { get; private set; }
 
@@ -52,20 +36,22 @@ public sealed partial class WireWorldController : Node
     }
   }
 
-  public void NextStep(Chunks.VoxelController voxels)
+  public void NextStep(VoxelController voxels)
   {
     foreach (var entry in _wireWorldVoxels)
     {
-      for (var index = 0; index < _offsets.Length; index++)
-        _neighbors[index] = voxels.GetVoxel(entry.VoxelPos + _offsets[index]);
-
       var transitions = TransitionRules.Transitions[entry.CurrentValue];
-      var futures = new List<WireWorldTransition>();
-      foreach (var t in transitions
-                 .Where(transition => Matches(transition.Neighbors, _neighbors)))
-        futures.Add(t);
 
-      ParseTransition(futures, entry);
+      var neighbors = entry.Neighbors.Select(voxels.GetVoxel);
+      var neighborArray = neighbors as byte[] ?? neighbors.ToArray();
+      foreach (var t in transitions)
+      {
+        if (!t.Odds(Random.Shared.NextDouble())) continue;
+        if (!Matches(t.Neighbors, neighborArray)) continue;
+
+        entry.NextValue = t.Result;
+        break;
+      }
     }
 
     foreach (var t in _wireWorldVoxels)
@@ -77,40 +63,17 @@ public sealed partial class WireWorldController : Node
     Step++;
   }
 
-  private static void ParseTransition(IReadOnlyList<WireWorldTransition> futures, WireWorldRef entry)
-  {
-    switch (futures.Count)
-    {
-      case 0:
-        // No change to entry.NextValue
-        break;
-      case 1:
-      {
-        var future = futures[0];
-        if (future.Odds(Random.Shared.NextDouble())) entry.NextValue = future.Result;
-        break;
-      }
-      default:
-      {
-        entry.NextValue = futures
-          .FirstOrDefault(static future => future.Odds(Random.Shared.NextDouble()),
-            new WireWorldTransition(null, 0, entry.NextValue))
-          .Result;
-        break;
-      }
-    }
-  }
-
   private static bool Matches(Rule[] transition, byte[] neighbors)
   {
     foreach (var rule in transition)
     {
-      var count = neighbors.Count(b => b == rule.Type);
-
-      if (count < rule.Min || count > rule.Max)
-        return false;
+      var count = 0;
+      foreach (var b in neighbors)
+      {
+        if (b == rule.Type) count++;
+      }
+      if (count < rule.Min || count > rule.Max) return true;
     }
-
-    return true;
+    return false;
   }
 }
