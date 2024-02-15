@@ -5,12 +5,4 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="Tests\TestVoxels\Test.gox" />
-    <Content Include="Tests\TestVoxels\Test.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scene\"/>
-      <Folder Include="Script\Voxels\Loading\"/>
-  </ItemGroup>
 </Project>
