@@ -425,6 +425,7 @@ _wireWorld = NodePath("Wireworld")
 
 [node name="EditorLoader" type="Node" parent="World"]
 script = ExtResource("20_80ed6")
+ShouldClear = true
 
 [node name="Wireworld" type="Node" parent="World" node_paths=PackedStringArray("PlayerCam")]
 script = ExtResource("21_t7a2q")

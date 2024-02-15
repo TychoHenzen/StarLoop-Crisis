@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using StarLoop.Script.Voxels.Chunks;
 using StarLoop.Script.Voxels.Data;
 using StarLoop.Script.Voxels.WireWorld.Transitions;
 using VoxelChunk = StarLoop.Script.Voxels.Chunks.VoxelChunk;
@@ -17,7 +16,24 @@ public sealed partial class WireWorldController : Node
 {
   [Export] public Camera3D PlayerCam { get; private set; }
 
+  private static readonly Vector3I[] _offsets =
+  {
+    new(-1, -1, -1), new(-1, -1, 0), new(-1, -1, 1),
+    new(-1, 0, -1), new(-1, 0, 0), new(-1, 0, 1),
+    new(-1, 1, -1), new(-1, 1, 0), new(-1, 1, 1),
+
+    new(0, -1, -1), new(0, -1, 0), new(0, -1, 1),
+    new(0, 0, -1), new(0, 0, 1),
+    new(0, 1, -1), new(0, 1, 0), new(0, 1, 1),
+
+    new(1, -1, -1), new(1, -1, 0), new(1, -1, 1),
+    new(1, 0, -1), new(1, 0, 0), new(1, 0, 1),
+    new(1, 1, -1), new(1, 1, 0), new(1, 1, 1)
+  };
+
   private readonly List<WireWorldRef> _wireWorldVoxels = new();
+
+  private readonly byte[] _neighbors = new byte[_offsets.Length];
 
   public static int Step { get; private set; }
 
@@ -36,18 +52,25 @@ public sealed partial class WireWorldController : Node
     }
   }
 
-  public void NextStep(VoxelController voxels)
+  private byte[] neighbors = new byte[26];
+  public void NextStep(Chunks.VoxelController voxels)
   {
     foreach (var entry in _wireWorldVoxels)
     {
+      for (var index = 0; index < _offsets.Length; index++)
+        _neighbors[index] = voxels.GetVoxel(entry.VoxelPos + _offsets[index]);
+
       var transitions = TransitionRules.Transitions[entry.CurrentValue];
 
-      var neighbors = entry.Neighbors.Select(voxels.GetVoxel);
-      var neighborArray = neighbors as byte[] ?? neighbors.ToArray();
       foreach (var t in transitions)
       {
         if (!t.Odds(Random.Shared.NextDouble())) continue;
-        if (!Matches(t.Neighbors, neighborArray)) continue;
+
+        for (int i = 0; i < _offsets.Length; i++)
+        {
+          neighbors[i] = voxels.GetVoxel(_offsets[i] + entry.VoxelPos);
+        }
+        if (!Matches(t.Neighbors, neighbors)) continue;
 
         entry.NextValue = t.Result;
         break;
@@ -62,18 +85,25 @@ public sealed partial class WireWorldController : Node
     voxels.RedrawDirty();
     Step++;
   }
-
+  
+  private static int count = 0;
+  private static int index = 0;
+  private static int index2 = 0;
   private static bool Matches(Rule[] transition, byte[] neighbors)
   {
-    foreach (var rule in transition)
+    for (index = 0; index < transition.Length; index++)
     {
-      var count = 0;
-      foreach (var b in neighbors)
+      count = 0;
+      for (index2 = 0; index2 < neighbors.Length; index2++)
       {
-        if (b == rule.Type) count++;
+        var b = neighbors[index2];
+        if (b == transition[index].Type) count++;
       }
-      if (count < rule.Min || count > rule.Max) return true;
+
+      if (count < transition[index].Min || count > transition[index].Max)
+        return false;
     }
-    return false;
+
+    return true;
   }
 }
